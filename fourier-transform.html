@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ch 5 · Fourier Transform · MA2014 Visual Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="ch5" data-page="ftrans">
+<div class="wrap"><aside class="toc"></aside><main>
+
+<div class="hero">
+  <span class="chip">CHAPTER 5</span>
+  <h1>Fourier Transform</h1>
+  <p>Fourier series handle <b>periodic</b> signals with a discrete list of frequencies. Let the period go to infinity and the list fills in to a continuous spectrum \(F(\omega)\). That is the Fourier transform, and it works on the whole real line.</p>
+</div>
+
+<section class="card" id="bridge">
+  <h2><span class="num">5.1</span> From Fourier series to Fourier transform</h2>
+  <p class="sub">Stretch the period of a pulse train and watch the spectral lines merge into a curve</p>
+  <div class="lab">
+    <div class="lab-h"><b>Period → ∞</b><div class="legend"><span><i style="background:#b388ff"></i>one pulse repeated every T</span><span><i style="background:#ffd166"></i>line spectrum T·cₙ at ωₙ = 2πn/T</span><span><i style="background:#06d6a0"></i>limit F(ω) = 2 sin ω / ω</span></div></div>
+    <div class="grid2"><canvas class="plot" id="brA"></canvas><canvas class="plot" id="brB"></canvas></div>
+    <div class="controls"><label class="ctl">period T <input type="range" id="brT" min="2.2" max="40" step="0.1" value="4"><output></output></label></div>
+    <div class="readout" id="brR"></div>
+  </div>
+  <div class="box thm"><span class="lbl">Theorem 5.1 · Fourier integral theorem</span>If \(f\) is absolutely integrable and \(f,f'\) are piecewise continuous, then
+  \[\frac{f(t^-)+f(t^+)}2=\frac1{2\pi}\int_{-\infty}^\infty F(\omega)e^{i\omega t}d\omega,\qquad F(\omega)=\int_{-\infty}^{\infty}f(\tau)e^{-i\omega\tau}d\tau\]
+  At a jump it gives the midpoint, just as Fourier series do.</div>
+</section>
+
+<section class="card" id="def">
+  <h2><span class="num">5.2</span> Definition and the transform pair</h2>
+  <p class="sub">Definitions 5.3 and 5.4, the convention used in every MA2014 paper</p>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Forward</span>\[F(\omega)=\mathcal F\{f(t)\}=\int_{-\infty}^{\infty}f(t)e^{-i\omega t}dt\]</div>
+    <div class="box def"><span class="lbl">Inverse</span>\[f(t)=\mathcal F^{-1}\{F\}=\frac1{2\pi}\int_{-\infty}^\infty F(\omega)e^{i\omega t}d\omega\]</div>
+  </div>
+  <div class="steps">
+    <div class="step" data-t="Ex 5.5">\(f=u(t)e^{-t}\): \(F=\int_0^\infty e^{-t}e^{-i\omega t}dt=\int_0^\infty e^{-(1+i\omega)t}dt\)</div>
+    <div class="step">\(=\left[\frac{-e^{-(1+i\omega)t}}{1+i\omega}\right]_0^\infty=\boxed{\frac{1}{1+i\omega}}=\frac{1-i\omega}{1+\omega^2}\)</div>
+    <div class="step">\(F\) is complex. Its magnitude \(|F|=\frac1{\sqrt{1+\omega^2}}\) says how much of each frequency is present. Its angle is the phase. Pick it in the viewer below.</div>
+  </div>
+</section>
+
+<section class="card" id="pairs">
+  <h2><span class="num">5.3</span> Transform pairs (Table 5.1 and the appendix)</h2>
+  <p class="sub">Tap to flip. The generalized pairs (δ, constants, sin, cos, sgn) can be quoted directly in exams.</p>
+  <div class="flips">
+    <div class="flip"><div class="in"><div class="f">\(Au(t)e^{-\alpha t}\)<small>tap</small></div><div class="b">\(\dfrac{A}{\alpha+i\omega}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(1\) for \(|t|\le\alpha\), else 0<small>tap</small></div><div class="b">\(\dfrac{2\sin\alpha\omega}{\omega}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(e^{-\alpha|t|}\)<small>tap</small></div><div class="b">\(\dfrac{2\alpha}{\alpha^2+\omega^2}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(e^{-\alpha t^2}\)<small>tap</small></div><div class="b">\(\sqrt{\dfrac\pi\alpha}\,e^{-\omega^2/4\alpha}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\delta(t-a)\)<small>tap</small></div><div class="b">\(e^{-i\omega a}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">constant \(A\)<small>tap</small></div><div class="b">\(2\pi A\,\delta(\omega)\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\cos at\)<small>tap</small></div><div class="b">\(\pi\big(\delta(\omega+a)+\delta(\omega-a)\big)\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\sin at\)<small>tap</small></div><div class="b">\(\frac\pi i\big(\delta(\omega-a)-\delta(\omega+a)\big)\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\operatorname{sgn}t\)<small>tap</small></div><div class="b">\(\dfrac2i\,\text{p.v.}\dfrac1\omega\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(Au(t)\)<small>tap</small></div><div class="b">\(A\left(\pi\delta(\omega)-i\,\text{p.v.}\frac1\omega\right)\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\text{p.v.}\frac1t\)<small>tap</small></div><div class="b">\(-i\pi\operatorname{sgn}\omega\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(e^{iat}\)<small>tap</small></div><div class="b">\(2\pi\delta(\omega-a)\)</div></div></div>
+  </div>
+  <div class="box def"><span class="lbl">Exercise 5.8</span>\(\mathcal F\{2025u(t)\}=2025\left(\pi\delta(\omega)-\frac{i}{\omega}\right)\) · \(\mathcal F\{\cos100t\}=\pi(\delta(\omega+100)+\delta(\omega-100))\) · \(\mathcal F\{e^{-9t^2}\}=\frac{\sqrt\pi}{3}e^{-\omega^2/36}\)</div>
+
+  <div class="lab">
+    <div class="lab-h"><b>Transform viewer: time on the left, frequency on the right</b>
+      <div class="legend"><span><i style="background:#b388ff"></i>f(t)</span><span><i style="background:#06d6a0"></i>Re F</span><span><i style="background:#ff7a59"></i>Im F</span><span><i style="background:#ffd166"></i>|F|</span></div></div>
+    <div class="grid2"><canvas class="plot" id="tvA"></canvas><canvas class="plot" id="tvB"></canvas></div>
+    <div class="controls">
+      <label class="ctl">f(t) <select id="tvF">
+        <option value="rect">rectangular pulse |t| ≤ α</option><option value="gauss">Gaussian e^{−αt²}</option><option value="two">e^{−α|t|}</option>
+        <option value="one">u(t)e^{−αt} (Ex 5.5)</option><option value="odd">e^{−αt} (t>0), −e^{αt} (t<0) (Tut 1(iii))</option><option value="tri">1 − t² on |t|<1 (Tut 1(i))</option></select></label>
+      <label class="ctl">α <input type="range" id="tva" min="0.3" max="4" step="0.05" value="1"><output></output></label>
+    </div>
+    <div class="readout" id="tvR"></div>
+  </div>
+  <div class="box tip"><span class="lbl">Remark 5.20, the uncertainty principle</span>Make the pulse narrower (bigger α for the Gaussian, smaller α for the rectangle) and the spectrum gets <b>wider</b>. You cannot be short in time and narrow in frequency at once.</div>
+</section>
+
+<section class="card" id="props">
+  <h2><span class="num">5.4</span> Properties of the Fourier transform</h2>
+  <p class="sub">Learn these and most exam transforms take two lines</p>
+  <table class="t">
+    <tr><th>property</th><th>time domain</th><th>frequency domain</th></tr>
+    <tr><td>Linearity (5.9)</td><td>\(af+bg\)</td><td>\(aF+bG\)</td></tr>
+    <tr><td>Frequency shift (5.11)</td><td>\(e^{iat}f(t)\)</td><td>\(F(\omega-a)\)</td></tr>
+    <tr><td>Time shift (5.13)</td><td>\(f(t-t_0)\)</td><td>\(e^{-i\omega t_0}F(\omega)\)</td></tr>
+    <tr><td>Scaling (5.18)</td><td>\(f(\alpha t)\)</td><td>\(\frac1\alpha F(\omega/\alpha)\)</td></tr>
+    <tr><td>Time reversal (5.21)</td><td>\(f(-t)\)</td><td>\(F(-\omega)\)</td></tr>
+    <tr><td>Conjugation (5.23)</td><td>\(\overline{f(t)}\)</td><td>\(\overline{F(-\omega)}\)</td></tr>
+    <tr><td>Differentiation (5.25)</td><td>\(f'(t)\)</td><td>\(i\omega F(\omega)\)</td></tr>
+    <tr><td>Multiply by t (5.29)</td><td>\(tf(t)\)</td><td>\(i\,F'(\omega)\)</td></tr>
+    <tr><td>Convolution (5.33)</td><td>\(f*g=\int f(\lambda)g(t-\lambda)d\lambda\)</td><td>\(F\,G\)</td></tr>
+    <tr><td>Correlation (5.39)</td><td>\(f\star g=\int f(\lambda)g(\lambda-t)d\lambda\)</td><td>\(F(\omega)\overline{G(\omega)}\)</td></tr>
+    <tr><td>Duality (5.41)</td><td>\(F(t)\)</td><td>\(2\pi f(-\omega)\)</td></tr>
+  </table>
+  <div class="lab">
+    <div class="lab-h"><b>Property explorer: apply an operation to a Gaussian pulse</b>
+      <div class="legend"><span><i style="background:#9aa6c7"></i>original</span><span><i style="background:#b388ff"></i>after operation</span><span><i style="background:#06d6a0"></i>Re F</span><span><i style="background:#ff7a59"></i>Im F</span><span><i style="background:#ffd166"></i>|F|</span></div></div>
+    <div class="grid2"><canvas class="plot" id="prA"></canvas><canvas class="plot" id="prB"></canvas></div>
+    <div class="controls">
+      <label class="ctl">operation <select id="prO"><option value="shift">time shift f(t − t₀)</option><option value="mod">modulate e^{iat}f(t)</option><option value="scale">scale f(αt)</option><option value="diff">derivative f′(t)</option></select></label>
+      <label class="ctl">amount <input type="range" id="prK" min="-3" max="3" step="0.05" value="1.5"><output></output></label>
+    </div>
+    <div class="readout" id="prR"></div>
+  </div>
+
+  <h3>2025 exam Q2(b) (10 marks)</h3>
+  <div class="steps">
+    <div class="step" data-t="(i) proof">\(\mathcal F\{f'\}=\int_{-\infty}^\infty f'(t)e^{-i\omega t}dt\). Integrate by parts: \(=\Big[f(t)e^{-i\omega t}\Big]_{-\infty}^{\infty}+i\omega\int f(t)e^{-i\omega t}dt\).</div>
+    <div class="step" data-t="(i) proof">Since \(f\to0\) at \(\pm\infty\) and \(|e^{-i\omega t}|=1\), the bracket is 0. So \(\boxed{\mathcal F\{f'\}=i\omega F(\omega)}\).</div>
+    <div class="step" data-t="(ii)">Spot the square: \(-t^2+2t-1=-(t-1)^2\). So the function is \((t-1)e^{-(t-1)^2}=g(t-1)\) with \(g(t)=te^{-t^2}\).</div>
+    <div class="step" data-t="(ii)">\(\mathcal F\{e^{-t^2}\}=\sqrt\pi e^{-\omega^2/4}\). Note that \(te^{-t^2}=-\frac12\frac{d}{dt}e^{-t^2}\), so by part (i): \(G=-\frac12\,i\omega\sqrt\pi e^{-\omega^2/4}\).</div>
+    <div class="step" data-t="(ii)">Time shift by 1: \(\boxed{\mathcal F=-\frac{i\sqrt\pi}{2}\,\omega\,e^{-\omega^2/4}e^{-i\omega}}\)</div>
+  </div>
+  <div class="box def"><span class="lbl">More worked properties</span>
+  Ex 5.10: \(\mathcal F\{2u(t)e^{-t}+u(t)e^{-2t}\}=\frac{2}{1+i\omega}+\frac1{2+i\omega}\).<br>
+  Ex 5.15: \(3e^{-it}\) on \([-5,5]\) is \(3e^{-it}\) times a box with \(\alpha=5\), so \(F=\frac{6\sin5(\omega+1)}{\omega+1}\).<br>
+  Ex 5.17 / Tut 2(i): \(\mathcal F\{4e^{-|t|}-5e^{-3|t+2|}\}=\frac{8}{1+\omega^2}-e^{2i\omega}\frac{30}{9+\omega^2}\).<br>
+  Ex 5.34: \(\frac1{(9+i\omega)^2}=\frac1{9+i\omega}\cdot\frac1{9+i\omega}\), so \(f=(u e^{-9t})*(ue^{-9t})=te^{-9t}u(t)\).<br>
+  Ex 5.43 (duality): \(\mathcal F\{\frac{2\sin t}{t}\}=2\pi\) for \(|\omega|&lt;1\), \(\pi\) at \(|\omega|=1\), and 0 otherwise.</div>
+</section>
+
+<section class="card" id="inverse">
+  <h2><span class="num">5.5</span> Inverse transforms (Exercise 5.45)</h2>
+  <p class="sub">Reshape \(F\) until it matches a table entry, then undo the properties</p>
+  <div class="grid2">
+    <div class="steps">
+      <div class="step" data-t="(i)">\(\frac{2025}{5-i\omega}\). Since \(\mathcal F\{e^{at}u(-t)\}=\frac{1}{a-i\omega}\), the answer is \(2025e^{5t}u(-t)\).</div>
+      <div class="step" data-t="(ii)">\(\frac{\sin\omega\cos\omega}{\omega}=\frac14\cdot\frac{2\sin2\omega}{\omega}\), so the answer is \(\frac14\) on \(|t|\le2\) and 0 elsewhere.</div>
+      <div class="step" data-t="(iii)">\(e^{-\omega^2/12}\): Gaussian with \(4\alpha=12\), so \(\alpha=3\). Answer: \(\sqrt{\frac3\pi}e^{-3t^2}\).</div>
+      <div class="step" data-t="(iv)">\(e^{20i\omega}=e^{-i\omega(-20)}\), so the answer is \(\delta(t+20)\).</div>
+      <div class="step" data-t="(v)">\(\frac{1}{\omega^2+3}=\frac1{2\sqrt3}\cdot\frac{2\sqrt3}{3+\omega^2}\), so the answer is \(\frac{1}{2\sqrt3}e^{-\sqrt3|t|}\).</div>
+    </div>
+    <div class="steps">
+      <div class="step" data-t="(vi)">\(\delta(\omega)\): \(\frac1{2\pi}\int\delta(\omega)e^{i\omega t}d\omega=\frac1{2\pi}\).</div>
+      <div class="step" data-t="(vii)">\(\frac1{(\omega+2)^2+9}\) is \(\frac16\cdot\frac{6}{9+\omega^2}\) shifted to \(\omega+2\), so the answer is \(\frac16e^{-2it}e^{-3|t|}\).</div>
+      <div class="step" data-t="(viii)">\(\frac{e^{-5i\omega}}{i\omega}\): since \(\mathcal F\{\frac12\operatorname{sgn}t\}=\frac1{i\omega}\), delaying by 5 gives \(\frac12\operatorname{sgn}(t-5)\).</div>
+      <div class="step" data-t="Tut 5(i)">\(\frac{2i\omega}{3+i\omega}=2-\frac{6}{3+i\omega}\), so the answer is \(2\delta(t)-6e^{-3t}u(t)\).</div>
+      <div class="step" data-t="Tut 5(ii)">\(\frac{1}{15+8i\omega-\omega^2}=\frac1{(3+i\omega)(5+i\omega)}=\frac12\left(\frac1{3+i\omega}-\frac1{5+i\omega}\right)\), so the answer is \(\frac12(e^{-3t}-e^{-5t})u(t)\).</div>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="sincos">
+  <h2><span class="num">5.6</span> Even and odd functions, sine and cosine transforms</h2>
+  <p class="sub">Half-line problems \((x\ge0)\) use \(F_s\) or \(F_c\)</p>
+  <div class="grid2">
+    <div class="box thm"><span class="lbl">Even f</span>\(\mathcal F\{f\}=2\int_0^\infty f\cos\omega t\,dt\), which is real and even.<br>\(F_c(\omega)=\int_0^\infty f\cos\omega t\,dt\)<br>\(f=\frac2\pi\int_0^\infty F_c\cos\omega t\,d\omega\)</div>
+    <div class="box thm"><span class="lbl">Odd f</span>\(\mathcal F\{f\}=-2i\int_0^\infty f\sin\omega t\,dt\), which is imaginary and odd.<br>\(F_s(\omega)=\int_0^\infty f\sin\omega t\,dt\)<br>\(f=\frac2\pi\int_0^\infty F_s\sin\omega t\,d\omega\)</div>
+  </div>
+  <div class="box def"><span class="lbl">Ex 5.53 · f = e^{−at}</span>\(F_c=\frac{a}{a^2+\omega^2}\), \(F_s=\frac{\omega}{a^2+\omega^2}\).<br>
+  <b>Tutorial 6:</b> box \(|t|&lt;1\) gives \(F=\frac{2\sin\omega}\omega\). Inverting at \(t=0\): \(1=\frac1{2\pi}\int\frac{2\sin\omega}{\omega}d\omega\), so \(\int_0^\infty\frac{\sin x}xdx=\frac\pi2\).</div>
+</section>
+
+<section class="card" id="apps">
+  <h2><span class="num">5.7</span> Solving PDEs with Fourier transforms</h2>
+  <p class="sub">Transform in x. The PDE becomes an ODE in t (or y). Solve it, then invert.</p>
+  <div class="flow"><div class="node">PDE in (x, t)</div><div class="arr">→ 𝓕ₓ</div><div class="node">ODE in t<br><small>\(\partial_x^2\to-\omega^2\)</small></div><div class="arr">→</div><div class="node">solve ODE</div><div class="arr">→ 𝓕⁻¹</div><div class="node">u(x, t)</div></div>
+  <h3>Heat on an infinite rod (Exercise 5.54)</h3>
+  <div class="steps">
+    <div class="step">\(\theta_t=k\theta_{xx}\) gives \(\Theta_t=-k\omega^2\Theta\), so \(\Theta=\Theta(\omega,0)e^{-k\omega^2t}\).</div>
+    <div class="step">\(\Theta(\omega,0)=\mathcal F\{e^{-ax^2}\}=\sqrt{\frac\pi a}e^{-\omega^2/4a}\), so \(\Theta=\sqrt{\frac\pi a}e^{-\omega^2\left(\frac1{4a}+kt\right)}\).</div>
+    <div class="step">This is again a Gaussian, with \(\frac1{4b}=\frac1{4a}+kt\). Inverting gives \(\boxed{\theta=\frac{1}{\sqrt{1+4akt}}\exp\left(-\frac{ax^2}{1+4akt}\right)}\). It gets wider and lower, and the total heat is conserved.</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Diffusion and wave on the whole line</b><span class="ctl">t = <output id="apT">0</output></span></div>
+    <canvas class="plot" id="ap"></canvas>
+    <div class="controls">
+      <label class="ctl">problem <select id="apP"><option value="heat">Ex 5.54 heat, Gaussian start</option><option value="wave">Ex 5.55 wave, y_t(x,0) = δ(x)</option><option value="semi">Tutorial 7: semi-infinite bar, sine transform</option></select></label>
+      <button id="apPlay" class="pri">▶ play</button>
+      <label class="ctl">a (or c) <input type="range" id="apa" min="0.3" max="3" step="0.1" value="1"><output></output></label>
+    </div>
+    <div class="readout" id="apR"></div>
+  </div>
+
+  <h3>2025 exam Q3(b): infinite strip, Fourier transform in x (12 marks)</h3>
+  <div class="grid2">
+    <div class="steps">
+      <div class="step">\(U_{xx}+U_{yy}=0\) on \(0&lt;y&lt;1\), \(U(x,0)=0\), \(U(x,1)=e^{-x^2}\).</div>
+      <div class="step">Transform in \(x\): \(-\omega^2\hat U+\hat U_{yy}=0\), so \(\hat U=A\cosh\omega y+B\sinh\omega y\).</div>
+      <div class="step">\(\hat U(\omega,0)=0\Rightarrow A=0\). \(\hat U(\omega,1)=\sqrt\pi e^{-\omega^2/4}\Rightarrow B=\frac{\sqrt\pi e^{-\omega^2/4}}{\sinh\omega}\).</div>
+      <div class="step">\(\hat U=\sqrt\pi e^{-\omega^2/4}\dfrac{\sinh\omega y}{\sinh\omega}\)</div>
+      <div class="step">Invert (the integrand is even in \(\omega\)):\[U=\frac{1}{\sqrt\pi}\int_0^\infty e^{-\omega^2/4}\frac{\sinh\omega y}{\sinh\omega}\cos\omega x\,d\omega\]</div>
+    </div>
+    <div class="lab mt0"><canvas class="plot" id="strip" style="height:300px"></canvas><div class="readout">Numerical evaluation of the boxed integral. The top edge carries the Gaussian, and the heat fades toward the cold bottom edge.</div></div>
+  </div>
+</section>
+
+<section class="card" id="quiz">
+  <h2><span class="num">✓</span> Test yourself</h2>
+  <div id="q5"></div>
+</section>
+
+</main></div>
+<footer>MA2014 Visual Lab · Chapter 5 · Fourier Transform</footer>
+<script src="js/common.js"></script>
+<script src="js/ftrans.js"></script>
+</body></html>

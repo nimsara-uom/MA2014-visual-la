@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ch 1 · Laplace Transform · MA2014 Visual Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="ch1" data-page="laplace">
+<div class="wrap"><aside class="toc"></aside><main>
+
+<div class="hero">
+  <span class="chip">CHAPTER 1</span>
+  <h1>Laplace Transform</h1>
+  <p>The big idea: turn a <b>differential equation</b> in time \(t\) into an <b>algebra problem</b> in \(s\). Solve the algebra, then transform back. Every topic below has a picture you can play with.</p>
+</div>
+
+<!-- 1 -->
+<section class="card" id="def">
+  <h2><span class="num">1.0</span> What the Laplace transform actually does</h2>
+  <p class="sub">Definition 1.1 — the "weighted area" machine</p>
+  <div class="box def"><span class="lbl">Definition</span>
+    \[F(s)=\mathcal{L}\{f(t)\}=\int_0^{\infty} f(t)\,e^{-st}\,dt\]
+    for every \(s\) for which the improper integral converges.</div>
+  <p>Read it as a recipe. Take your signal \(f(t)\). Multiply it by a decaying exponential \(e^{-st}\). Measure the <b>total area</b> under the product. That single number is \(F(s)\). Change \(s\) and you get a different number, so \(F\) is a new function of \(s\).</p>
+  <div class="lab">
+    <div class="lab-h"><b>Laplace machine: watch the area become F(s)</b>
+      <div class="legend"><span><i style="background:#ff7a59"></i>f(t)</span><span><i style="background:#9aa6c7"></i>e<sup>−st</sup></span><span><i style="background:#ffd166"></i>f(t)e<sup>−st</sup> (area = F(s))</span></div></div>
+    <div class="grid2">
+      <canvas class="plot" id="lapA"></canvas>
+      <canvas class="plot" id="lapB"></canvas>
+    </div>
+    <div class="controls">
+      <label class="ctl">f(t) = <select id="lapF">
+        <option value="one">1</option><option value="t">t</option><option value="t2">t²</option><option value="exp" selected>e^{at}</option>
+        <option value="sin">sin(at)</option><option value="cos">cos(at)</option><option value="sinh">sinh(at)</option></select></label>
+      <label class="ctl">a <input type="range" id="lapa" min="0.5" max="3" step="0.1" value="1"><output></output></label>
+      <label class="ctl">s <input type="range" id="laps" min="0.2" max="6" step="0.05" value="2.5"><output></output></label>
+    </div>
+    <div class="readout" id="lapR"></div>
+  </div>
+  <div class="box tip"><span class="lbl">See it</span>Drag \(s\) to the left until \(s\) is close to \(a\) with \(f=e^{at}\). The yellow area explodes. That is why \(\mathcal{L}\{e^{at}\}=\frac{1}{s-a}\) needs \(\operatorname{Re}(s)>a\). The integral only converges when the exponential beats the growth of \(f\).</div>
+</section>
+
+<!-- 2 -->
+<section class="card" id="table">
+  <h2><span class="num">1.1</span> The must-know table (Theorem 1.2)</h2>
+  <p class="sub">Tap each card to flip it. Try to say the answer before you flip.</p>
+  <div class="flips">
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{1\}\)<small>tap</small></div><div class="b">\(\dfrac1s,\ \ s>0\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{t\}\)<small>tap</small></div><div class="b">\(\dfrac1{s^2}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{t^n\}\)<small>tap</small></div><div class="b">\(\dfrac{n!}{s^{n+1}}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{e^{at}\}\)<small>tap</small></div><div class="b">\(\dfrac1{s-a},\ \ s>a\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{\sin at\}\)<small>tap</small></div><div class="b">\(\dfrac{a}{s^2+a^2}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{\cos at\}\)<small>tap</small></div><div class="b">\(\dfrac{s}{s^2+a^2}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{\sinh at\}\)<small>tap</small></div><div class="b">\(\dfrac{a}{s^2-a^2}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{\cosh at\}\)<small>tap</small></div><div class="b">\(\dfrac{s}{s^2-a^2}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{\delta(t-a)\}\)<small>tap</small></div><div class="b">\(e^{-as}\)</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(\mathcal{L}\{u(t-a)\}\)<small>tap</small></div><div class="b">\(\dfrac{e^{-as}}{s}\)</div></div></div>
+  </div>
+  <div class="box tip"><span class="lbl">Memory trick</span><b>sin</b> has the <b>a</b> on top, <b>cos</b> has the <b>s</b> on top. The hyperbolic versions are identical except \(+a^2\) becomes \(-a^2\).</div>
+
+  <h3>Exam proof: L{sin at} and L{cos at} (2025 Q1(a)(i), 6 marks)</h3>
+  <div class="steps">
+    <div class="step">Use Euler: \(e^{iat}=\cos at+i\sin at\). Compute one integral instead of two.
+      \[\mathcal{L}\{e^{iat}\}=\int_0^\infty e^{-(s-ia)t}\,dt=\left[\frac{-e^{-(s-ia)t}}{s-ia}\right]_0^\infty=\frac{1}{s-ia}\quad(\operatorname{Re}s>0)\]
+      The upper limit vanishes because \(|e^{-(s-ia)t}|=e^{-\operatorname{Re}(s)t}\to0\).</div>
+    <div class="step">Rationalise the denominator:
+      \[\frac{1}{s-ia}=\frac{s+ia}{(s-ia)(s+ia)}=\frac{s}{s^2+a^2}+i\,\frac{a}{s^2+a^2}\]</div>
+    <div class="step">By linearity \(\mathcal{L}\{e^{iat}\}=\mathcal{L}\{\cos at\}+i\,\mathcal{L}\{\sin at\}\). Match real and imaginary parts:
+      \[\boxed{\mathcal{L}\{\cos at\}=\frac{s}{s^2+a^2}},\qquad \boxed{\mathcal{L}\{\sin at\}=\frac{a}{s^2+a^2}}\]</div>
+  </div>
+  <div class="box def"><span class="lbl">Exercise 1.4 · piecewise f</span>
+    For \(f=-1\) on \([0,2)\) and \(f=1\) for \(t\ge2\), split the integral: \(\int_0^2 -e^{-st}dt+\int_2^\infty e^{-st}dt=\dfrac{2e^{-2s}-1}{s}\).
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="card" id="shift1">
+  <h2><span class="num">1.2</span> Linearity and the first shifting theorem</h2>
+  <p class="sub">Multiplying by \(e^{at}\) in time = sliding \(F\) to the right by \(a\) in \(s\)</p>
+  <div class="grid2">
+    <div class="box thm"><span class="lbl">Theorem 1.5 · Linearity</span>\[\mathcal{L}\{f+g\}=\mathcal{L}\{f\}+\mathcal{L}\{g\},\quad \mathcal{L}\{cf\}=c\,\mathcal{L}\{f\}\]</div>
+    <div class="box thm"><span class="lbl">Theorem 1.6 · s-shifting</span>\[\mathcal{L}\{e^{at}f(t)\}=F(s-a)\]Replace every \(s\) in \(F\) with \(s-a\).</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Slide a and see both worlds move</b>
+      <div class="legend"><span><i style="background:#9aa6c7"></i>original</span><span><i style="background:#ff7a59"></i>with e<sup>at</sup></span></div></div>
+    <div class="grid2"><canvas class="plot" id="shA"></canvas><canvas class="plot" id="shB"></canvas></div>
+    <div class="controls">
+      <label class="ctl">a <input type="range" id="sha" min="-1.5" max="1" step="0.05" value="-0.4"><output></output></label>
+      <label class="ctl">b <input type="range" id="shb" min="1" max="5" step="0.1" value="3"><output></output></label>
+    </div>
+    <div class="readout" id="shR"></div>
+  </div>
+  <div class="box def"><span class="lbl">Exercise 1.7 results (all from s-shifting)</span>
+    \[\mathcal{L}\{e^{at}t^n\}=\frac{n!}{(s-a)^{n+1}},\quad \mathcal{L}\{e^{at}\cos bt\}=\frac{s-a}{(s-a)^2+b^2},\quad \mathcal{L}\{e^{at}\sin bt\}=\frac{b}{(s-a)^2+b^2}\]
+    \[\mathcal{L}\{e^{at}\cosh bt\}=\frac{s-a}{(s-a)^2-b^2},\qquad \mathcal{L}\{e^{at}\sinh bt\}=\frac{b}{(s-a)^2-b^2}\]
+  </div>
+  <div class="box def"><span class="lbl">Exercise 1.9 · \(\mathcal{L}\{e^{-3t}\cos^2 t\}\)</span>
+    Write \(\cos^2t=\tfrac12+\tfrac12\cos2t\), so \(\mathcal{L}\{\cos^2t\}=\frac1{2s}+\frac{s}{2(s^2+4)}\). Then shift \(s\to s+3\): \(\ \dfrac{1}{2(s+3)}+\dfrac{s+3}{2((s+3)^2+4)}\).</div>
+  <h3>Time scaling (Theorem 1.10)</h3>
+  <div class="box thm"><span class="lbl">Theorem</span>\[\mathcal{L}\{f(\alpha t)\}=\frac1\alpha F\!\left(\frac s\alpha\right),\quad\alpha>0\]
+  Check with Example 1.11: \(\mathcal{L}\{\sin t\}=\frac1{s^2+1}\), so \(\mathcal{L}\{\sin5t\}=\frac15\cdot\frac1{(s/5)^2+1}=\frac{5}{s^2+25}\).</div>
+</section>
+
+<!-- 4 -->
+<section class="card" id="deriv">
+  <h2><span class="num">1.3</span> Transforms of derivatives and integrals</h2>
+  <p class="sub">This is the reason Laplace solves ODEs: derivatives turn into multiplication by \(s\)</p>
+  <div class="flow">
+    <div class="node">\(y'\)</div><div class="arr">→</div><div class="node">\(sY-y(0)\)</div>
+    <div style="width:30px"></div>
+    <div class="node">\(y''\)</div><div class="arr">→</div><div class="node">\(s^2Y-sy(0)-y'(0)\)</div>
+    <div style="width:30px"></div>
+    <div class="node">\(\int_0^t f\)</div><div class="arr">→</div><div class="node">\(F(s)/s\)</div>
+  </div>
+  <div class="box thm"><span class="lbl">General formula (1.4)</span>
+    \[\mathcal{L}\{y^{(n)}\}=s^nY(s)-s^{n-1}y(0)-s^{n-2}y'(0)-\cdots-y^{(n-1)}(0)\]
+    The powers of \(s\) count down as the derivatives at 0 count up.</div>
+
+  <h3>Exam proof: L{f''} = s²F − s f(0) − f'(0) (2025 Q1(a)(ii), 6 marks)</h3>
+  <div class="steps">
+    <div class="step">Start with the first derivative. Integrate by parts with \(u=e^{-st}\), \(dv=f'(t)dt\):
+      \[\mathcal{L}\{f'\}=\int_0^\infty e^{-st}f'(t)\,dt=\Big[e^{-st}f(t)\Big]_0^\infty+s\int_0^\infty e^{-st}f(t)\,dt\]</div>
+    <div class="step">Because \(f\) is of exponential order \(a\), \(|f(t)|\le Me^{at}\). So for \(\operatorname{Re}s>a\), \(e^{-st}f(t)\to0\) as \(t\to\infty\). The bracket gives \(0-f(0)\):
+      \[\mathcal{L}\{f'\}=sF(s)-f(0)\]</div>
+    <div class="step">Apply the same result to \(g=f'\):
+      \[\mathcal{L}\{f''\}=s\,\mathcal{L}\{f'\}-f'(0)=s\big(sF(s)-f(0)\big)-f'(0)\]</div>
+    <div class="step">\[\boxed{\mathcal{L}\{f''(t)\}=s^2F(s)-sf(0)-f'(0)},\qquad \operatorname{Re}(s)>a\]</div>
+  </div>
+
+  <h3>Exam proof: L{∫₀ᵗ f(u)du} = F(s)/s (2021 Q1(a)(ii), 5 marks)</h3>
+  <div class="steps">
+    <div class="step">Let \(g(t)=\int_0^t f(u)\,du\). Then \(g(0)=0\) and by the fundamental theorem of calculus \(g'(t)=f(t)\).</div>
+    <div class="step">Apply the derivative rule to \(g\): \(\mathcal{L}\{g'\}=s\,\mathcal{L}\{g\}-g(0)=s\,\mathcal{L}\{g\}\).</div>
+    <div class="step">But \(\mathcal{L}\{g'\}=\mathcal{L}\{f\}=F(s)\). So \(F(s)=s\,\mathcal{L}\{g\}\), which gives \(\boxed{\mathcal{L}\left\{\int_0^t f(u)du\right\}=\dfrac{F(s)}{s}}\).</div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="card" id="tn">
+  <h2><span class="num">1.4</span> Multiplying and dividing by t</h2>
+  <p class="sub">Multiplying by \(t\) means differentiate in \(s\). Dividing by \(t\) means integrate in \(s\).</p>
+  <div class="grid2">
+    <div class="box thm"><span class="lbl">Theorem 1.13</span>\[\mathcal{L}\{t^nf(t)\}=(-1)^n\frac{d^n}{ds^n}F(s)\]</div>
+    <div class="box thm"><span class="lbl">Theorem 1.16</span>\[\mathcal{L}\left\{\frac{f(t)}t\right\}=\int_s^\infty F(p)\,dp\]</div>
+  </div>
+  <h3>Exam proof: division by t (2021 Q1(a)(i), 5 marks)</h3>
+  <div class="steps">
+    <div class="step">Write the right-hand side using the definition of \(F\):
+      \[\int_s^\infty F(p)\,dp=\int_s^\infty\!\!\int_0^\infty f(t)e^{-pt}\,dt\,dp\]</div>
+    <div class="step">Swap the order of integration (allowed for convergent integrals):
+      \[=\int_0^\infty f(t)\left(\int_s^\infty e^{-pt}dp\right)dt\]</div>
+    <div class="step">The inner integral is \(\left[\frac{-e^{-pt}}{t}\right]_{p=s}^{\infty}=\frac{e^{-st}}{t}\).</div>
+    <div class="step">\[\int_0^\infty \frac{f(t)}{t}e^{-st}\,dt=\mathcal{L}\left\{\frac{f(t)}{t}\right\}\quad\blacksquare\]</div>
+  </div>
+  <h3>Using both rules (2021 Q1(b), 10 marks)</h3>
+  <div class="steps">
+    <div class="step" data-t="(ii)">Spot the pattern: \(\int_0^\infty e^{-t}g(t)\,dt\) is just \(\mathcal{L}\{g\}\) at \(s=1\). Here \(g(t)=\int_0^t\frac{\sin u}{u}du\).</div>
+    <div class="step" data-t="(ii)">Division rule: \(\mathcal{L}\{\frac{\sin t}t\}=\int_s^\infty\frac{dp}{p^2+1}=\frac\pi2-\tan^{-1}s=\tan^{-1}\frac1s\).</div>
+    <div class="step" data-t="(ii)">Integral rule: \(\mathcal{L}\{g\}=\frac1s\tan^{-1}\frac1s\). Put \(s=1\): \(\ \tan^{-1}1=\boxed{\pi/4}\).</div>
+    <div class="step" data-t="(i)">For \(\mathcal{L}\left\{\int_0^{t/2}\frac{1-e^{-2x}}{x}dx\right\}\): first \(\mathcal{L}\{\frac{1-e^{-2t}}{t}\}=\int_s^\infty\left(\frac1p-\frac1{p+2}\right)dp=\ln\frac{s+2}{s}\).</div>
+    <div class="step" data-t="(i)">Integral rule: \(G(s)=\frac1s\ln\left(1+\frac2s\right)\) for \(g(t)=\int_0^t\). Then the time-scaling rule with \(\alpha=\frac12\): \(\mathcal{L}\{g(t/2)\}=2G(2s)=\frac{2}{2s}\ln\left(1+\frac1s\right)=\boxed{\frac{\ln(1+1/s)}{s}}\).</div>
+  </div>
+  <div class="box warn"><span class="lbl">Note on the paper</span>The identity \(\ln(1+1/s)/s\) only works if the integrand is \(\frac{1-e^{-2x}}{x}\). The scanned paper looks like \(e^{2x}\); with \(e^{+2x}\) you would get \(\ln(1-1/s)/s\). State your reading in the script if this appears.</div>
+  <div class="box def"><span class="lbl">Examples 1.15 and 1.18</span>
+    \(\mathcal{L}\{t\sinh at\}=-\frac{d}{ds}\frac{a}{s^2-a^2}=\frac{2as}{(s^2-a^2)^2}\) · \(\mathcal{L}\{t^2\cos at\}=\frac{d^2}{ds^2}\frac{s}{s^2+a^2}=\frac{2s(s^2-3a^2)}{(s^2+a^2)^3}\)<br>
+    \(\mathcal{L}\{\frac{\sin3t}{t}\}=\tan^{-1}\frac3s\) · \(\mathcal{L}\{e^{5t}\frac{\sin2t}{t}\}=\tan^{-1}\frac{2}{s-5}\)</div>
+</section>
+
+<!-- 6 -->
+<section class="card" id="step">
+  <h2><span class="num">1.5</span> Unit step and the second shifting theorem</h2>
+  <p class="sub">\(u(t-a)\) is a switch that turns on at \(t=a\)</p>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Definition 1.19</span>\[u(t)=\begin{cases}0&t&lt;0\\1&t\ge0\end{cases}\]</div>
+    <div class="box thm"><span class="lbl">Theorem 1.21 · t-shifting</span>\[\mathcal{L}\{u(t-a)f(t-a)\}=e^{-as}F(s)\]</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Delay a signal: f(t−a)u(t−a) versus the common mistake f(t)u(t−a)</b>
+      <div class="legend"><span><i style="background:#9aa6c7"></i>f(t)</span><span><i style="background:#ff7a59"></i>u(t−a)f(t−a) ✔ shifted copy</span><span><i style="background:#ffd166"></i>u(t−a)f(t) ✘ just switched on</span></div></div>
+    <canvas class="plot" id="stp"></canvas>
+    <div class="controls">
+      <label class="ctl">f(t) = <select id="stpF"><option value="sin">sin t</option><option value="t2">t²</option><option value="t">t</option><option value="exp">e^{−t}</option></select></label>
+      <label class="ctl">a <input type="range" id="stpa" min="0" max="6" step="0.05" value="2"><output></output></label>
+      <label class="ctl"><input type="checkbox" id="stpW" checked> show the mistake</label>
+    </div>
+    <div class="readout" id="stpR"></div>
+  </div>
+  <div class="box tip"><span class="lbl">Recipe for piecewise functions</span>
+    Each jump in value adds a step. Example 1.20: \(f=8\) for \(t&lt;2\) then \(6\) gives \(f=8-2u(t-2)\), so \(F=\frac8s-\frac{2e^{-2s}}{s}\).<br>
+    For \(\mathcal{L}\{u(t-a)g(t)\}\), rewrite \(g(t)\) in terms of \((t-a)\) first. Example 1.23: \(t^2=(t-2)^2+4(t-2)+4\), so
+    \(\mathcal{L}\{u(t-2)t^2\}=e^{-2s}\left(\frac2{s^3}+\frac4{s^2}+\frac4s\right)\).</div>
+</section>
+
+<!-- 7 -->
+<section class="card" id="delta">
+  <h2><span class="num">1.6</span> Dirac delta: an infinitely tall, infinitely thin spike of area 1</h2>
+  <p class="sub">The 2022 paper builds δ as the limit of rectangles δₙ. Watch it happen.</p>
+  <div class="box def"><span class="lbl">Definition 1.25</span>
+  \[\int_{-\infty}^{\infty}\delta(x)\,dx=1,\qquad \int_{-\infty}^{\infty}f(x)\delta(x-a)\,dx=f(a)\]
+  It is a distribution (a generalized function), not an ordinary function.</div>
+  <div class="lab">
+    <div class="lab-h"><b>δₙ(t) = n on [a − 1/2n, a + 1/2n]: area stays 1, the integral of f·δₙ tends to f(a)</b>
+      <div class="legend"><span><i style="background:#ff5d8f"></i>δₙ(t)</span><span><i style="background:#4cc9f0"></i>f(t)</span><span><i style="background:#ffd166"></i>f·δₙ area</span></div></div>
+    <canvas class="plot" id="dlt"></canvas>
+    <div class="controls">
+      <label class="ctl">n <input type="range" id="dltn" min="0.3" max="25" step="0.1" value="1"><output></output></label>
+      <label class="ctl">a <input type="range" id="dlta" min="1" max="5" step="0.05" value="3"><output></output></label>
+    </div>
+    <div class="readout" id="dltR"></div>
+  </div>
+  <h3>Exam proof (2022 Q1(a)–(b), 12 marks)</h3>
+  <div class="steps">
+    <div class="step">\(\delta_n\) is zero outside \([a-\frac1{2n},a+\frac1{2n}]\). So
+      \[\int_0^\infty f(t)\delta_n(t)\,dt=n\int_{a-1/2n}^{a+1/2n}f(t)\,dt\quad(n\text{ large so the interval is inside }(0,\infty)).\]</div>
+    <div class="step">Mean value theorem for integrals (\(f\) continuous): there is \(c_n\) in the interval with \(\int_{a-1/2n}^{a+1/2n}f\,dt=f(c_n)\cdot\frac1n\). So the integral equals \(f(c_n)\).</div>
+    <div class="step">As \(n\to\infty\), the interval shrinks to \(a\), so \(c_n\to a\) and by continuity \(f(c_n)\to f(a)\):
+      \[\int_0^\infty f(t)\delta(t-a)\,dt=\lim_{n\to\infty}f(c_n)=f(a)\]</div>
+    <div class="step" data-t="(b)">Take \(f(t)=e^{-st}\), which is continuous at \(a\):
+      \[\mathcal{L}\{\delta(t-a)\}=\int_0^\infty e^{-st}\delta(t-a)\,dt=\boxed{e^{-as}}\]
+      With \(a=0\) this gives \(\mathcal{L}\{\delta(t)\}=1\). Example 1.30: \(\mathcal{L}\{\delta(t-5)e^{-3t}\}=e^{-15}e^{-5s}\).</div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="card" id="periodic">
+  <h2><span class="num">1.7</span> Periodic functions</h2>
+  <p class="sub">Integrate over one period only, then divide by \(1-e^{-sT}\)</p>
+  <div class="box thm"><span class="lbl">Theorem 1.31</span>\[\mathcal{L}\{f(t)\}=\frac{\int_0^T e^{-st}f(t)\,dt}{1-e^{-sT}}\]</div>
+  <div class="lab">
+    <div class="lab-h"><b>Only the highlighted period matters</b></div>
+    <canvas class="plot short" id="per"></canvas>
+    <div class="controls"><label class="ctl">function <select id="perF"><option value="abs">|sin t| (Ex 1.32)</option><option value="tut">Tutorial Q1 staircase (T = 4)</option><option value="saw">sawtooth t (T = 1)</option></select></label></div>
+    <div class="readout" id="perR"></div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="card" id="inverse">
+  <h2><span class="num">1.8</span> Inverse Laplace transform</h2>
+  <p class="sub">Go backwards: partial fractions, complete the square, then read the table</p>
+  <div class="grid3">
+    <div class="box thm"><span class="lbl">Shift in s</span>\(\mathcal{L}^{-1}\{F(s+a)\}=e^{-at}f(t)\)</div>
+    <div class="box thm"><span class="lbl">Delay</span>\(\mathcal{L}^{-1}\{e^{-as}F(s)\}=u(t-a)f(t-a)\)</div>
+    <div class="box thm"><span class="lbl">Scale</span>\(\mathcal{L}^{-1}\{F(\alpha s)\}=\frac1\alpha f(t/\alpha)\)</div>
+  </div>
+  <div class="box tip"><span class="lbl">Decision flowchart</span>
+    <div class="flow">
+      <div class="node">Is there \(e^{-as}\)?<br><small>pull it out, shift at the end</small></div><div class="arr">→</div>
+      <div class="node">Denominator factors?<br><small>partial fractions</small></div><div class="arr">→</div>
+      <div class="node">Irreducible quadratic?<br><small>complete the square \((s-a)^2+b^2\)</small></div><div class="arr">→</div>
+      <div class="node">Match numerator<br><small>to \((s-a)\) and \(b\)</small></div>
+    </div></div>
+  <h3>Worked: Example 1.38 (4) and (6)</h3>
+  <div class="steps">
+    <div class="step">\(\frac{1}{s(s+3)}=\frac{A}{s}+\frac{B}{s+3}\). Cover-up: \(A=\frac{1}{0+3}=\frac13\), \(B=\frac{1}{-3}\). So \(f(t)=\frac13\left(1-e^{-3t}\right)\).</div>
+    <div class="step">\(F=\frac{2(s-1)e^{-4s}}{(s-1)^2+1}\). Ignore \(e^{-4s}\) first: \(\mathcal{L}^{-1}\left\{\frac{2(s-1)}{(s-1)^2+1}\right\}=2e^{t}\cos t\).</div>
+    <div class="step">Now apply the delay of 4: \(f(t)=2e^{t-4}\cos(t-4)\,u(t-4)\).</div>
+    <div class="step" data-t="Ex 1.39">\(\frac{1+e^{-\pi s}}{s^2+1}\to\sin t+u(t-\pi)\sin(t-\pi)=\sin t\,(1-u(t-\pi))\). The second term cancels the first after \(t=\pi\).</div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="card" id="conv">
+  <h2><span class="num">1.9</span> Convolution: flip, slide, multiply, add up</h2>
+  <p class="sub">\((f*g)(t)=\int_0^t f(\tau)g(t-\tau)\,d\tau\) and \(\mathcal{L}\{f*g\}=F(s)G(s)\)</p>
+  <div class="lab">
+    <div class="lab-h"><b>Convolution animator</b>
+      <div class="legend"><span><i style="background:#4cc9f0"></i>f(τ)</span><span><i style="background:#ff7a59"></i>g(t−τ) flipped and slid</span><span><i style="background:#ffd166"></i>overlap area</span><span><i style="background:#06d6a0"></i>(f*g)(t) built so far</span></div></div>
+    <div class="grid2"><canvas class="plot" id="cvA"></canvas><canvas class="plot" id="cvB"></canvas></div>
+    <div class="controls">
+      <label class="ctl">pair <select id="cvP"><option value="ex">f = t², g = 2t+3 (Ex 1.42)</option><option value="rect">two boxes</option><option value="expsin">f = e^{−t}, g = sin t</option></select></label>
+      <label class="ctl">t <input type="range" id="cvt" min="0" max="4" step="0.02" value="1.5"><output></output></label>
+      <button id="cvPlay">▶ animate</button>
+    </div>
+    <div class="readout" id="cvR"></div>
+  </div>
+  <div class="box warn"><span class="lbl">Remark 1.45</span>\(\mathcal{L}\{f\,g\}\ne\mathcal{L}\{f\}\cdot\mathcal{L}\{g\}\). The product rule belongs to convolution, not ordinary multiplication.</div>
+  <div class="box def"><span class="lbl">Exercise 1.48 (2)</span>\(\frac{s}{(s^2+a^2)^2}=\frac{s}{s^2+a^2}\cdot\frac1{s^2+a^2}\), so \(f=\cos at * \frac{\sin at}{a}=\frac{1}{a}\int_0^t\cos a\tau\sin a(t-\tau)d\tau=\frac{t\sin at}{2a}\).<br>
+  Example 1.47: \(\int_0^te^{2(t-\tau)}\tau^3d\tau=\tau^3*e^{2t}\), so its transform is \(\frac{6}{s^4}\cdot\frac{1}{s-2}\).</div>
+</section>
+
+<!-- 11 -->
+<section class="card" id="ode">
+  <h2><span class="num">1.10</span> Solving ODEs: the 4-box pipeline</h2>
+  <p class="sub">Figure 1.1 from the notes. Click through the stages.</p>
+  <div class="flow" id="pipe">
+    <div class="node hl">Differential equation<br><small>in t</small></div><div class="arr">→ 𝓛</div>
+    <div class="node">Algebraic equation<br><small>in s, ICs included</small></div><div class="arr">→</div>
+    <div class="node">Solve for Y(s)<br><small>partial fractions</small></div><div class="arr">→ 𝓛⁻¹</div>
+    <div class="node">Solution y(t)</div>
+  </div>
+  <div class="steps" id="pipeSteps">
+    <div class="step" data-t="ODE">Example 1.52: \(y''+5y'+6y=0,\ y(0)=2,\ y'(0)=3\).</div>
+    <div class="step" data-t="𝓛">Transform every term: \(\big(s^2Y-2s-3\big)+5\big(sY-2\big)+6Y=0\).</div>
+    <div class="step" data-t="Solve">\((s^2+5s+6)Y=2s+13\Rightarrow Y=\dfrac{2s+13}{(s+2)(s+3)}=\dfrac{9}{s+2}-\dfrac{7}{s+3}\).</div>
+    <div class="step" data-t="𝓛⁻¹">\(\boxed{y(t)=9e^{-2t}-7e^{-3t}}\). Check: \(y(0)=2\) ✔, \(y'(0)=-18+21=3\) ✔.</div>
+  </div>
+
+  <h3>Spring–mass hit by a hammer at t = 3 (2022 Q1(c), 6 marks)</h3>
+  <div class="grid2">
+    <div class="steps">
+      <div class="step">\(y''+y=\delta(t-3),\ y(0)=y'(0)=0\). Transform: \(s^2Y+Y=e^{-3s}\).</div>
+      <div class="step">\(Y=\dfrac{e^{-3s}}{s^2+1}\). Without the exponential this is \(\sin t\).</div>
+      <div class="step">Delay by 3: \(\boxed{y(t)=\sin(t-3)\,u(t-3)}\). The mass sits still until the hit, then oscillates with amplitude 1.</div>
+    </div>
+    <div class="lab mt0"><canvas class="plot short" id="hammer"></canvas>
+      <div class="controls"><button id="hamPlay">▶ play</button><span class="ctl">t = <output id="hamT">0</output></span></div></div>
+  </div>
+
+  <h3>LR circuit (2021 Q1(c), 5 marks)</h3>
+  <div class="steps">
+    <div class="step">\(I'+I=V(t)\), \(I(0)=0\), with \(V(t)=\int_0^te^{2u}\sin3u\,du\).</div>
+    <div class="step">s-shift then integral rule: \(\mathcal{L}\{e^{2t}\sin3t\}=\frac{3}{(s-2)^2+9}\), so \(\mathcal{L}\{V\}=\dfrac{3}{s\left((s-2)^2+9\right)}\).</div>
+    <div class="step">\((s+1)I(s)=\mathcal{L}\{V\}\Rightarrow I(s)=\dfrac{3}{s(s+1)(s^2-4s+13)}\).</div>
+    <div class="step">Partial fractions: \(\ \dfrac{3/13}{s}-\dfrac{1/6}{s+1}+\dfrac{-5(s-2)-3}{78\left((s-2)^2+9\right)}\).</div>
+    <div class="step">\[\boxed{I(t)=\frac{3}{13}-\frac{1}{6}e^{-t}-\frac{e^{2t}}{78}\left(5\cos3t+\sin3t\right)}\]Check: \(I(0)=\frac{18-13-5}{78}=0\) ✔.</div>
+  </div>
+
+  <h3>Series RLC circuit lab (Example 1.56)</h3>
+  <p>Kirchhoff gives \(Li'+Ri+\frac1C\int_0^ti\,d\tau=v(t)\). With \(v=\delta(t)\): \(\left(Ls+R+\frac{1}{Cs}\right)I(s)=1\). For \(L=1,R=4,C=\frac13\): \(I=\frac{s}{(s+1)(s+3)}\), so \(i(t)=\frac32e^{-3t}-\frac12e^{-t}\).</p>
+  <div class="lab">
+    <div class="lab-h"><b>Impulse response of a series RLC: change R, L, C</b><span id="rlcType" class="pill"></span></div>
+    <canvas class="plot" id="rlc"></canvas>
+    <div class="controls">
+      <label class="ctl">R (Ω) <input type="range" id="rlcR" min="0" max="8" step="0.1" value="4"><output></output></label>
+      <label class="ctl">L (H) <input type="range" id="rlcL" min="0.2" max="3" step="0.1" value="1"><output></output></label>
+      <label class="ctl">C (F) <input type="range" id="rlcC" min="0.05" max="1.5" step="0.01" value="0.33"><output></output></label>
+    </div>
+    <div class="readout" id="rlcRd"></div>
+  </div>
+
+  <h3>System of ODEs: two masses, three springs (2025 Q1(b), 13 marks)</h3>
+  <div class="grid2">
+    <div class="steps">
+      <div class="step">With \(m=1,k=2\): \(y_1''=-4y_1+2y_2\), \(y_2''=2y_1-4y_2\), \(y_i(0)=0\), \(y_i'(0)=1\).</div>
+      <div class="step">Transform: \((s^2+4)Y_1-2Y_2=1\) and \(-2Y_1+(s^2+4)Y_2=1\).</div>
+      <div class="step">Subtract the equations: \((s^2+6)(Y_1-Y_2)=0\Rightarrow Y_1=Y_2\).</div>
+      <div class="step">Then \((s^2+2)Y_1=1\Rightarrow Y_1=Y_2=\dfrac1{s^2+2}\).</div>
+      <div class="step">\[\boxed{y_1(t)=y_2(t)=\tfrac{1}{\sqrt2}\sin\sqrt2\,t}\]Both masses move together, so the middle spring never stretches.</div>
+    </div>
+    <div class="lab mt0">
+      <canvas class="plot short" id="msAnim"></canvas>
+      <canvas class="plot short" id="msPlot" style="margin-top:8px"></canvas>
+      <div class="controls">
+        <label class="ctl">y₁′(0) <input type="range" id="msv1" min="-1.5" max="1.5" step="0.1" value="1"><output></output></label>
+        <label class="ctl">y₂′(0) <input type="range" id="msv2" min="-1.5" max="1.5" step="0.1" value="1"><output></output></label>
+      </div>
+      <div class="readout" id="msR"></div>
+    </div>
+  </div>
+  <div class="box def"><span class="lbl">Example 1.54 · integro-differential</span>\(y'=1-\sin t-\int_0^ty\,d\tau,\ y(0)=0\Rightarrow sY=\frac1s-\frac{1}{s^2+1}-\frac Ys\), so \(Y=\frac{1}{s^2+1}-\frac{s}{(s^2+1)^2}\) and \(y=\sin t-\frac{t}{2}\sin t\).</div>
+</section>
+
+<!-- 12 -->
+<section class="card" id="lti">
+  <h2><span class="num">1.11</span> LTI systems and transfer functions</h2>
+  <p class="sub">Output = input convolved with the impulse response</p>
+  <div class="flow">
+    <div class="node">x(t)</div><div class="arr">→</div><div class="node">h(t)<br><small>impulse response</small></div><div class="arr">→</div><div class="node">y = h * x</div>
+  </div>
+  <div class="flow">
+    <div class="node">X(s)</div><div class="arr">→</div><div class="node">H(s)<br><small>transfer function</small></div><div class="arr">→</div><div class="node">Y = H·X</div>
+  </div>
+  <div class="box def"><span class="lbl">Definitions</span><b>Linear</b>: \(c_1x_1+c_2x_2\mapsto c_1y_1+c_2y_2\). <b>Time invariant</b>: delaying the input delays the output by the same amount. With zero initial conditions, \(H(s)=\dfrac{Y(s)}{X(s)}\).</div>
+  <div class="steps">
+    <div class="step" data-t="Ex 1.57">Input \(x=9u(t)\Rightarrow X=\frac9s\). Output \(y=\sin(9t)u(t)\Rightarrow Y=\frac{9}{s^2+81}\).</div>
+    <div class="step">\(H(s)=\frac{Y}{X}=\frac{9}{s^2+81}\cdot\frac{s}{9}=\boxed{\frac{s}{s^2+81}}\)</div>
+    <div class="step">Impulse response \(h(t)=\mathcal{L}^{-1}\{H\}=\boxed{\cos9t}\) for \(t\ge0\).</div>
+  </div>
+</section>
+
+<section class="card" id="quiz">
+  <h2><span class="num">✓</span> Test yourself</h2>
+  <div id="q1"></div>
+</section>
+
+</main></div>
+<footer>MA2014 Visual Lab · Chapter 1 · Laplace Transform</footer>
+<script src="js/common.js"></script>
+<script src="js/laplace.js"></script>
+</body></html>

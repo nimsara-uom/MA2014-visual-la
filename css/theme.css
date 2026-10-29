@@ -1,0 +1,71 @@
+/* Light theme overrides (dark is the default in style.css). Toggle button lives in the nav bar. */
+.themeBtn{margin-left:auto;font-size:.85rem;padding:6px 14px;border-radius:999px;white-space:nowrap}
+.themeBtn:hover{background:var(--acc);color:#0b1020}
+
+html[data-theme="light"]{
+  --bg:#eef1f9; --card:rgba(255,255,255,.88); --card2:rgba(30,45,100,.07);
+  --line:rgba(30,45,100,.16); --text:#1b2340; --muted:#56638a;
+  --c1:#e2531f; --c2:#c98700; --c3:#00946f; --c4:#0b86b8; --c5:#7240d9; --ex:#d02a64;
+  --good:#10985f; --bad:#d6303f; --shadow:0 8px 28px rgba(30,45,100,.12);
+  color-scheme:light;
+}
+html[data-theme="light"] body{
+  background:radial-gradient(1200px 600px at 10% -10%,rgba(11,134,184,.13),transparent 60%),
+             radial-gradient(900px 500px at 100% 0%,rgba(114,64,217,.10),transparent 60%),
+             linear-gradient(180deg,#f6f8fd,#e8ecf7 70%);
+  background-attachment:fixed;
+}
+html[data-theme="light"] nav.top{background:rgba(255,255,255,.88)}
+html[data-theme="light"] nav.top .brand,
+html[data-theme="light"] nav.top a.tab:hover,
+html[data-theme="light"] .toc a:hover,html[data-theme="light"] .toc a.here,
+html[data-theme="light"] .ctl output,html[data-theme="light"] .tile h3,
+html[data-theme="light"] .quiz .opt.right,html[data-theme="light"] .quiz .opt.wrong{color:var(--text)}
+html[data-theme="light"] nav.top .brand span{background:linear-gradient(90deg,#0b86b8,#7240d9);-webkit-background-clip:text;background-clip:text}
+html[data-theme="light"] nav.top a.tab.active,
+html[data-theme="light"] .box.def .lbl,
+html[data-theme="light"] .num{color:#fff}
+html[data-theme="light"] nav.top a.tab.active{color:#fff}
+html[data-theme="light"] section.card>h2 .num{color:#fff}
+html[data-theme="light"] .box.def .lbl{color:var(--acc)}
+html[data-theme="light"] .hero p,html[data-theme="light"] .tile p,html[data-theme="light"] .quiz .why{color:#33406a}
+html[data-theme="light"] .hero .chip{background:rgba(255,255,255,.7)}
+html[data-theme="light"] .hero canvas{opacity:.55}
+
+/* canvases and lab panels */
+html[data-theme="light"] canvas.plot{background:#f4f6fd;border-color:rgba(30,45,100,.14)}
+html[data-theme="light"] .lab{background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(235,239,250,.7))}
+html[data-theme="light"] .readout{background:rgba(30,45,100,.07);color:#1b2340}
+
+/* form controls */
+html[data-theme="light"] select,html[data-theme="light"] input[type=text],html[data-theme="light"] input[type=number]{background:#fff;color:var(--text)}
+html[data-theme="light"] button,html[data-theme="light"] .btn{color:var(--text);background:rgba(30,45,100,.08)}
+html[data-theme="light"] button:hover,html[data-theme="light"] .btn:hover,
+html[data-theme="light"] button.pri{color:#fff}
+html[data-theme="light"] .controls label,html[data-theme="light"] .ctl{color:var(--muted)}
+html[data-theme="light"] kbd{background:#e4e9f7;color:var(--text)}
+
+/* boxes, tables, flip cards */
+html[data-theme="light"] .box{background:rgba(255,255,255,.7)}
+html[data-theme="light"] .box.thm{background:rgba(0,148,111,.09)}
+html[data-theme="light"] .box.tip{background:rgba(201,135,0,.11)}
+html[data-theme="light"] .box.warn{background:rgba(214,48,63,.09)}
+html[data-theme="light"] .box.exam{background:rgba(208,42,100,.08)}
+html[data-theme="light"] table.t tr:hover td{background:rgba(30,45,100,.05)}
+html[data-theme="light"] .flip .b{background:color-mix(in srgb,var(--acc) 18%,#ffffff)}
+html[data-theme="light"] .flow .node.hl{color:#fff}
+html[data-theme="light"] .tile{background:linear-gradient(160deg,color-mix(in srgb,var(--acc) 20%,#ffffff),rgba(255,255,255,.7))}
+html[data-theme="light"] .tile .tags span,html[data-theme="light"] .tag{background:rgba(30,45,100,.08)}
+html[data-theme="light"] .tile .pbar{background:rgba(30,45,100,.12)}
+html[data-theme="light"] .pill.ell{background:rgba(11,134,184,.16);color:#0b86b8}
+html[data-theme="light"] .pill.hyp{background:rgba(226,83,31,.15);color:#c8420f}
+html[data-theme="light"] .pill.par,html[data-theme="light"] .pill.ok{background:rgba(0,148,111,.15);color:#00805f}
+html[data-theme="light"] .pill.no{background:rgba(214,48,63,.14);color:#c4202f}
+html[data-theme="light"] .caseCards .box.hl{box-shadow:0 0 24px rgba(11,134,184,.3)}
+html[data-theme="light"] table.align .col.hl{background:rgba(11,134,184,.16)}
+html[data-theme="light"] .papers button.on{color:#fff}
+html[data-theme="light"] .heat td{color:#1b2340}
+html[data-theme="light"] footer{color:var(--muted)}
+
+html[data-theme="light"] button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+html[data-theme="light"] button:hover,html[data-theme="light"] .btn:hover{background:var(--acc);border-color:var(--acc);color:#fff}

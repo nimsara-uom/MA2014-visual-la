@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ch 4 · Series Solutions, Frobenius, Bessel, Legendre · MA2014 Visual Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<style>
+ table.align td,table.align th{text-align:center;font-size:.9rem;padding:6px 8px}
+ table.align td.lab{text-align:left;color:var(--muted)}
+ table.align .col.hl{background:rgba(76,201,240,.18)}
+ table.align th.col{cursor:pointer}
+ .caseCards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+ @media(max-width:820px){.caseCards{grid-template-columns:1fr}}
+ .caseCards .box{transition:.3s;opacity:.55}
+ .caseCards .box.hl{opacity:1;transform:scale(1.03);box-shadow:0 0 30px rgba(76,201,240,.35);border-color:var(--acc)}
+</style>
+</head>
+<body class="ch4" data-page="series">
+<div class="wrap"><aside class="toc"></aside><main>
+
+<div class="hero">
+  <span class="chip">CHAPTER 4</span>
+  <h1>Series Solutions, Frobenius, Bessel and Legendre</h1>
+  <p>When an ODE has variable coefficients like \(xy''+y'+xy=0\), no elementary formula solves it. So we <b>guess a power series</b>, plug it in, and let the equation tell us every coefficient. This topic appears in <b>every past paper</b>, worth 25 marks.</p>
+</div>
+
+<section class="card" id="points">
+  <h2><span class="num">4.1</span> Ordinary, regular singular and irregular singular points</h2>
+  <p class="sub">Definition 4.1 for \(P_0(x)y''+P_1(x)y'+P_2(x)y=0\). Asked in 2021 Q2(a) and 2022 Q2(a).</p>
+  <div class="grid3">
+    <div class="box def"><span class="lbl">Ordinary point</span>\(P_0(a)\ne0\). Plain power series \(\sum a_n(x-a)^n\) works.</div>
+    <div class="box def"><span class="lbl">Regular singular</span>\(P_0(a)=0\) <b>but</b> both
+      \[p=(x-a)\frac{P_1}{P_0},\quad q=(x-a)^2\frac{P_2}{P_0}\]
+      stay finite (analytic) at \(a\). Use Frobenius.</div>
+    <div class="box def"><span class="lbl">Irregular singular</span>\(P_0(a)=0\) and \(p\) or \(q\) blows up at \(a\). Beyond the course.</div>
+  </div>
+  <div class="box tip"><span class="lbl">"Analytic" in plain words</span>It can be written as a convergent power series \(\sum c_n(x-a)^n\) near \(a\). For a ratio of polynomials, that just means <b>the factor \((x-a)\) cancels completely and nothing is left in the denominator</b>.</div>
+  <div class="lab">
+    <div class="lab-h"><b>Singular point detective: does (x − a)P₁/P₀ or (x − a)²P₂/P₀ explode?</b>
+      <div class="legend"><span><i style="background:#4cc9f0"></i>p(x) = (x−a)P₁/P₀</span><span><i style="background:#ff7a59"></i>q(x) = (x−a)²P₂/P₀</span></div></div>
+    <canvas class="plot" id="sp"></canvas>
+    <div class="controls">
+      <label class="ctl">equation <select id="spE"></select></label>
+      <label class="ctl">point <select id="spA"></select></label>
+    </div>
+    <div class="readout" id="spR"></div>
+  </div>
+</section>
+
+<section class="card" id="ordinary">
+  <h2><span class="num">4.2</span> Power series about an ordinary point</h2>
+  <p class="sub">The 4-step recipe, with the step everyone gets wrong (aligning powers) made visual</p>
+  <div class="flow">
+    <div class="node">① Assume \(y=\sum a_nx^n\)</div><div class="arr">→</div>
+    <div class="node">② Differentiate and substitute</div><div class="arr">→</div>
+    <div class="node">③ Collect each power \(x^k\) and set it to 0</div><div class="arr">→</div>
+    <div class="node">④ Recurrence gives \(a_2,a_3,\dots\) in terms of \(a_0,a_1\)</div>
+  </div>
+  <div class="box tip"><span class="lbl">The index-shift trick (the red circles in your notes)</span>
+    \(y'=\sum_{n\ge1}na_nx^{n-1}=\sum_{n\ge0}(n+1)a_{n+1}x^n\) and \(y''=\sum_{n\ge0}(n+2)(n+1)a_{n+2}x^n\).<br>
+    More generally, a term \(x^p\,y^{(d)}\) puts \(a_{k+d-p}\) into the column \(x^k\). The table below does this for you.</div>
+
+  <div class="lab">
+    <div class="lab-h"><b>Power-series engine: pick an equation, click a column</b></div>
+    <div class="controls" style="margin-top:0">
+      <label class="ctl">equation <select id="osE"></select></label>
+    </div>
+    <div class="readout" id="osEq" style="font-size:1.05rem"></div>
+    <div style="overflow-x:auto"><table class="t align" id="osTab"></table></div>
+    <div class="readout" id="osCol"></div>
+    <div class="readout" id="osSol"></div>
+    <canvas class="plot" id="osP" style="margin-top:10px"></canvas>
+    <div class="legend"><span><i style="background:#ffd166"></i>y₁ series (a₀ = 1, a₁ = 0)</span><span><i style="background:#06d6a0"></i>y₂ series (a₀ = 0, a₁ = 1)</span><span><i style="background:#9aa6c7"></i>exact numerical solution (RK4)</span></div>
+    <div class="controls"><label class="ctl">terms N <input type="range" id="osN" min="2" max="30" step="1" value="6"><output></output></label></div>
+  </div>
+  <div class="box exam"><span class="lbl">Exam pattern</span>"Solve about x = a" with \(a\ne0\): substitute \(t=x-a\) first. Then it is the same method in \(t\). The engine has the 2021, 2022 and 2025 versions, already shifted for you.</div>
+  <div class="box thm"><span class="lbl">Theorem 4.5</span>About an ordinary point \(x=a\), solutions are \(y=\sum a_n(x-a)^n\), valid in an interval around \(a\). Watch the graph: for \((1-x^2)y''\dots\) the series stops matching past \(|x|=1\), where \(P_0=0\).</div>
+</section>
+
+<section class="card" id="frob">
+  <h2><span class="num">4.3</span> Frobenius method about a regular singular point</h2>
+  <p class="sub">Theorem 4.6: \(y=x^m\sum a_nx^n\) with \(a_0\ne0\). The new unknown \(m\) comes from the indicial equation.</p>
+  <div class="steps">
+    <div class="step">Assume \(y=\sum a_nx^{n+m}\), so \(y'=\sum(n+m)a_nx^{n+m-1}\) and \(y''=\sum(n+m)(n+m-1)a_nx^{n+m-2}\).</div>
+    <div class="step">Substitute and look at the <b>lowest power of x</b>. Its coefficient is \(a_0\cdot I(m)\). Since \(a_0\ne0\), \(I(m)=0\). This quadratic is the <b>indicial equation</b>.</div>
+    <div class="step">The rest of the powers give the recurrence, so \(a_1,a_2,\dots\) follow in terms of \(a_0\).</div>
+    <div class="step">The two roots \(m_1\ge m_2\) decide the form of the second solution (cards below).</div>
+  </div>
+  <div class="caseCards" id="cases">
+    <div class="box"><span class="lbl">Case 1 · \(m_1-m_2\notin\mathbb Z\)</span>Two plain Frobenius series:<br>\(y_1=x^{m_1}\sum a_nx^n\), \(y_2=x^{m_2}\sum b_nx^n\)</div>
+    <div class="box"><span class="lbl">Case 2 · \(m_1=m_2\)</span>A log is guaranteed:<br>\(y_2=y_1\ln|x|+x^{m_1}\sum b_nx^n\)</div>
+    <div class="box"><span class="lbl">Case 3 · \(m_1-m_2=N\in\mathbb Z^+\)</span>\(y_2=C\,y_1\ln|x|+x^{m_2}\sum b_nx^n\).<br>Sometimes \(C=0\), giving no log.</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Frobenius engine</b><span id="frCase" class="pill"></span></div>
+    <div class="controls" style="margin-top:0"><label class="ctl">equation <select id="frE"></select></label></div>
+    <div class="readout" id="frEq" style="font-size:1.05rem"></div>
+    <div class="steps" id="frSteps">
+      <div class="step" data-t="Check"><span id="fr1"></span></div>
+      <div class="step" data-t="Indicial"><span id="fr2"></span></div>
+      <div class="step" data-t="Recurrence"><span id="fr3"></span></div>
+      <div class="step" data-t="y₁"><span id="fr4"></span></div>
+      <div class="step" data-t="y₂"><span id="fr5"></span></div>
+    </div>
+    <canvas class="plot" id="frP" style="margin-top:10px"></canvas>
+    <div class="legend"><span><i style="background:#ffd166"></i>y₁ with N terms</span><span><i style="background:#06d6a0"></i>y₂ with N terms (when it is a plain series)</span><span><i style="background:#9aa6c7"></i>40-term reference</span></div>
+    <div class="controls"><label class="ctl">terms N <input type="range" id="frN" min="1" max="20" step="1" value="4"><output></output></label></div>
+  </div>
+  <div class="box warn"><span class="lbl">Remark 4.9</span>If \(m\) is not an integer, \(x^m\) is only real for \(x>0\). Work on \(x>0\), and treat \(x&lt;0\) separately if needed. The same applies to \(x>a\) for a point \(x=a\).</div>
+</section>
+
+<section class="card" id="bessel">
+  <h2><span class="num">4.4</span> Bessel's equation and Bessel functions</h2>
+  <p class="sub">\(x^2y''+xy'+(x^2-\nu^2)y=0\): drums, circular pipes, anything round</p>
+  <div class="box def"><span class="lbl">Bessel function of the first kind</span>
+  \[J_n(x)=\sum_{r=0}^\infty\frac{(-1)^r}{r!\,(n+r)!}\left(\frac x2\right)^{2r+n}\]</div>
+  <div class="steps">
+    <div class="step" data-t="Ex 4.16">\(x=0\) is regular singular: \(p=1\) and \(q=x^2-\nu^2\) are both polynomials.</div>
+    <div class="step">Indicial: \(m(m-1)+m-\nu^2=0\Rightarrow m=\pm\nu\).</div>
+    <div class="step">Recurrence: \(a_k\big((m+k)^2-\nu^2\big)=-a_{k-2}\). With \(m=\nu\): \(a_k=-\dfrac{a_{k-2}}{k(k+2\nu)}\), and the odd coefficients are 0.</div>
+    <div class="step">So \(a_{2r}=\dfrac{(-1)^ra_0}{2^{2r}r!(\nu+1)(\nu+2)\cdots(\nu+r)}\). Choosing \(a_0=\frac1{2^\nu\nu!}\) gives exactly \(J_\nu\).</div>
+    <div class="step" data-t="2022/2025">\(\nu=0\) gives \(xy''+y'+xy=0\) (divide by \(x\)). Equal roots, so Case 2:
+      \[y_1=J_0=1-\frac{x^2}{4}+\frac{x^4}{64}-\cdots,\quad y_2=J_0\ln x+\frac{x^2}{4}-\frac{3x^4}{128}+\frac{11x^6}{13824}-\cdots\]</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Bessel functions Jₙ(x)</b><div class="legend"><span><i style="background:#4cc9f0"></i>Jₙ(x)</span><span><i style="background:#ffd166"></i>partial sum, R terms</span><span><i style="background:#ff5d8f"></i>zeros</span></div></div>
+    <canvas class="plot" id="bs"></canvas>
+    <div class="controls">
+      <label class="ctl">order n <input type="range" id="bsn" min="0" max="6" step="1" value="0"><output></output></label>
+      <label class="ctl">series terms R <input type="range" id="bsR" min="1" max="25" step="1" value="4"><output></output></label>
+      <label class="ctl"><input type="checkbox" id="bsAll"> show J₀ to J₄ together</label>
+    </div>
+    <div class="readout" id="bsRd"></div>
+  </div>
+  <div class="box def"><span class="lbl">Exercise 4.17</span>(a) \(x^2y''+xy'+(x^2-1)y=0\) is Bessel with \(\nu=1\): roots \(m=\pm1\) differ by 2, which gives Case 3 with a log, and \(y_1=J_1\). (b) About \(x=1\), the point is <b>ordinary</b>. Put \(t=x-1\) and use the power-series engine above (preset "Ex 4.17(b)").</div>
+</section>
+
+<section class="card" id="legendre">
+  <h2><span class="num">4.5</span> Legendre polynomials</h2>
+  <p class="sub">\((1-x^2)y''-2xy'+n(n+1)y=0\): one of the two series stops and becomes a polynomial</p>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Rodrigues' formula</span>\[P_n(x)=\frac1{2^nn!}\frac{d^n}{dx^n}(x^2-1)^n\]normalised so that \(P_n(1)=1\).</div>
+    <div class="box thm"><span class="lbl">Orthogonality on [−1, 1]</span>\[\int_{-1}^1P_mP_n\,dx=0\ (m\ne n),\qquad\int_{-1}^1P_n^2\,dx=\frac{2}{2n+1}\]</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Legendre polynomials and the Rodrigues machine</b><div class="legend"><span><i style="background:#4cc9f0"></i>Pₙ</span><span><i style="background:#9aa6c7"></i>(x²−1)ⁿ and its derivatives</span></div></div>
+    <div class="grid2"><canvas class="plot" id="lgA"></canvas><canvas class="plot" id="lgB"></canvas></div>
+    <div class="controls">
+      <label class="ctl">n <input type="range" id="lgn" min="0" max="7" step="1" value="5"><output></output></label>
+      <label class="ctl">derivatives taken k <input type="range" id="lgk" min="0" max="7" step="1" value="5"><output></output></label>
+      <label class="ctl">orthogonality: m <input type="range" id="lgm" min="0" max="7" step="1" value="2"><output></output></label>
+    </div>
+    <div class="readout" id="lgR"></div>
+  </div>
+  <div class="steps">
+    <div class="step" data-t="Ex 4.19">\((x^2-1)^5=x^{10}-5x^8+10x^6-10x^4+5x^2-1\)</div>
+    <div class="step">Differentiate 5 times: \(\frac{10!}{5!}x^5-5\frac{8!}{3!}x^3+10\frac{6!}{1!}x=30240x^5-33600x^3+7200x\)</div>
+    <div class="step">Divide by \(2^5\cdot5!=3840\): \(\boxed{P_5(x)=\tfrac18\left(63x^5-70x^3+15x\right)}\)</div>
+  </div>
+  <div class="box def"><span class="lbl">The first few</span>\(P_0=1,\ P_1=x,\ P_2=\frac12(3x^2-1),\ P_3=\frac12(5x^3-3x),\ P_4=\frac18(35x^4-30x^2+3)\)</div>
+</section>
+
+<section class="card" id="quiz">
+  <h2><span class="num">✓</span> Test yourself</h2>
+  <div id="q4"></div>
+</section>
+
+</main></div>
+<footer>MA2014 Visual Lab · Chapter 4 · Series Solutions</footer>
+<script src="js/common.js"></script>
+<script src="js/series.js"></script>
+</body></html>

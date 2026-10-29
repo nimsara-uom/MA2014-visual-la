@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ch 3 · Partial Differential Equations · MA2014 Visual Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="ch3" data-page="pde">
+<div class="wrap"><aside class="toc"></aside><main>
+
+<div class="hero">
+  <span class="chip">CHAPTER 3</span>
+  <h1>Partial Differential Equations</h1>
+  <p>Temperature in a plate, heat in a bar, a vibrating guitar string. Each is a function of two variables obeying a PDE. Separation of variables turns one PDE into two ODEs, and Fourier series stitch the answer together.</p>
+</div>
+
+<section class="card" id="vocab">
+  <h2><span class="num">3.0</span> Vocabulary: order, linear, quasilinear, homogeneous</h2>
+  <p class="sub">Definitions 3.3–3.6</p>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Order</span>The highest derivative that appears.</div>
+    <div class="box def"><span class="lbl">Linear</span>\(u\) and its derivatives appear only to the <b>first power</b>, are never multiplied together, and their coefficients depend only on \(x,y\).</div>
+    <div class="box def"><span class="lbl">Quasilinear (order m)</span>The <b>highest-order</b> derivatives appear linearly. Their coefficients may contain \(u\) and lower derivatives.</div>
+    <div class="box def"><span class="lbl">Homogeneous</span>A linear PDE that can be written \(L[u]=0\). If it is \(L[u]=g\) with \(g\ne0\), it is nonhomogeneous.</div>
+  </div>
+  <h3>Classify these (Example 3.7). Tap a card to check.</h3>
+  <div class="flips">
+    <div class="flip"><div class="in"><div class="f">\(u_{xx}+u_{yy}=0\)<small>tap</small></div><div class="b">linear · homogeneous · 2nd order</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(xu\,u_{xx}+xyu^2u_{xy}+yu\,u_{yy}+u_x^2+u_y^2+u^2=0\)<small>tap</small></div><div class="b">nonlinear · quasilinear · 2nd order</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\(u_{xx}+u_{yy}=(u_x^2+u_y^2)u\)<small>tap</small></div><div class="b">nonlinear · quasilinear · 2nd order</div></div></div>
+    <div class="flip"><div class="in"><div class="f">\((x^2+y^2)u_x+u_{xy}-3u=0\)<small>tap</small></div><div class="b">linear · homogeneous · 2nd order</div></div></div>
+  </div>
+</section>
+
+<section class="card" id="classify">
+  <h2><span class="num">3.1</span> Classification: elliptic, parabolic, hyperbolic</h2>
+  <p class="sub">Only the principal part \(Au_{xx}+Bu_{xy}+Cu_{yy}\) matters</p>
+  <div class="box thm"><span class="lbl">Discriminant test</span>For \(Au_{xx}+Bu_{xy}+Cu_{yy}+Du_x+Eu_y+Fu+G=0\):<br>
+  \(B^2-4AC&lt;0\): <span class="pill ell">elliptic</span> (Laplace) · \(B^2-4AC=0\): <span class="pill par">parabolic</span> (heat) · \(B^2-4AC>0\): <span class="pill hyp">hyperbolic</span> (wave)</div>
+  <div class="box tip"><span class="lbl">Why those names?</span>It is the same test as for the conic \(Ax^2+Bxy+Cy^2=1\). Change A, B, C below and watch the curve change into an ellipse, a parabola-like pair of lines, or a hyperbola.</div>
+  <div class="lab">
+    <div class="lab-h"><b>Discriminant classifier</b><span id="clType" class="pill"></span></div>
+    <div class="grid2"><canvas class="plot" id="clC"></canvas>
+      <div>
+        <div class="controls" style="flex-direction:column;align-items:flex-start">
+          <label class="ctl">A <input type="range" id="clA" min="-5" max="5" step="0.5" value="1"><output></output></label>
+          <label class="ctl">B <input type="range" id="clB" min="-8" max="8" step="0.5" value="0"><output></output></label>
+          <label class="ctl">C <input type="range" id="clCc" min="-5" max="5" step="0.5" value="2"><output></output></label>
+          <label class="ctl">preset <select id="clP">
+            <option value="">— choose —</option>
+            <option value="1,0,2">u_xx + 2u_yy = 1</option><option value="1,0,-1">u_xx − u_yy = 1</option>
+            <option value="1,0,3">u_xx + 3u_yy − 2u_x + … (Ex 3.9.3)</option><option value="1,0,0">u_t = u_xx (heat)</option>
+            <option value="-1,0,1">u_tt − u_xx = 0 (wave)</option>
+            <option value="1,-7,6">Tut 1(a) u_xx − 7u_xy + 6u_yy</option><option value="1,1,-6">Tut 1(b) u_xx + u_xy − 6u_yy</option>
+            <option value="4,-4,1">Tut 1(c) 4u_xx − 4u_xy + u_yy</option><option value="2,0,3">Tut 1(d) 2u_xx + 3u_yy</option><option value="0,2,3">Tut 1(e) 2u_xy + 3u_yy</option>
+          </select></label>
+        </div>
+        <div class="readout" id="clR"></div>
+      </div>
+    </div>
+  </div>
+  <h3>Variable coefficients: the type can change from region to region</h3>
+  <div class="lab">
+    <div class="lab-h"><b>Type map over the plane</b>
+      <div class="legend"><span><i style="background:#4cc9f0"></i>elliptic</span><span><i style="background:#06d6a0"></i>parabolic (boundary)</span><span><i style="background:#ff7a59"></i>hyperbolic</span></div></div>
+    <canvas class="plot" id="map"></canvas>
+    <div class="controls"><label class="ctl">equation <select id="mapE"><option value="tri">Tricomi u_xx + x u_yy = 0</option><option value="tut">Tutorial Q2 (x²−1)u_xx + 2y u_xy − u_yy = 0</option></select></label></div>
+    <div class="readout" id="mapR"></div>
+  </div>
+</section>
+
+<section class="card" id="direct">
+  <h2><span class="num">3.2</span> Solving by direct integration</h2>
+  <p class="sub">Integrate as in an ODE, but the "constant" is a function of the other variable</p>
+  <div class="box warn"><span class="lbl">The key rule</span>When you integrate with respect to \(x\), the constant of integration is an arbitrary function of \(y\) (or \(t\)). Do not write \(+C\).</div>
+  <div class="grid2">
+    <div class="steps">
+      <div class="step" data-t="Ex 3.10">\(u_{xx}=12x^2(t+1)\), with \(u=\cos2t\) and \(u_x=\sin t\) at \(x=0\).</div>
+      <div class="step">Integrate in \(x\): \(u_x=4x^3(t+1)+f(t)\). At \(x=0\): \(f(t)=\sin t\).</div>
+      <div class="step">Again: \(u=x^4(t+1)+x\sin t+g(t)\). At \(x=0\): \(g(t)=\cos 2t\).</div>
+      <div class="step">\(\boxed{u=x^4(t+1)+x\sin t+\cos2t}\)</div>
+    </div>
+    <div class="steps">
+      <div class="step" data-t="Ex 3.11">\(u_{xy}=\sin(x+y)\), with \(u_x=1\) at \(y=0\) and \(u=(y-1)^2\) at \(x=0\).</div>
+      <div class="step">Integrate in \(y\): \(u_x=-\cos(x+y)+g(x)\). At \(y=0\): \(g(x)=1+\cos x\).</div>
+      <div class="step">Integrate in \(x\): \(u=-\sin(x+y)+x+\sin x+h(y)\). At \(x=0\): \(h(y)=(y-1)^2+\sin y\).</div>
+      <div class="step">\(\boxed{u=\sin x+\sin y-\sin(x+y)+x+(y-1)^2}\). The handwritten notes drop the \(+x\). Check: \(u_x=\cos x-\cos(x+y)+1\), which is 1 at \(y=0\) ✔.</div>
+    </div>
+  </div>
+  <div class="box def"><span class="lbl">Tutorial Q3</span>\(u_{xx}=24x^2(t-2)\), \(u=e^{2t}\) and \(u_x=4t\) at \(x=0\) gives \(u=2x^4(t-2)+4tx+e^{2t}\).</div>
+</section>
+
+<section class="card" id="sepvar">
+  <h2><span class="num">3.3</span> Separation of variables and the three cases</h2>
+  <p class="sub">2021 exam Q3(a), 12 marks: "consider all three cases"</p>
+  <div class="steps">
+    <div class="step" data-t="Assume">Heat equation \(u_t=c^2u_{xx}\). Try \(u(x,t)=X(x)T(t)\). Then \(XT'=c^2X''T\).</div>
+    <div class="step" data-t="Separate">Divide by \(c^2XT\): \(\dfrac{T'}{c^2T}=\dfrac{X''}{X}\). The left side depends only on \(t\) and the right only on \(x\), so both equal a constant \(k\).</div>
+    <div class="step" data-t="Two ODEs">\(X''-kX=0\) and \(T'-c^2kT=0\).</div>
+    <div class="step" data-t="k = 0">\(X''=0\Rightarrow X=Ax+B\), and \(T'=0\Rightarrow T=C\). So \(u=(Ax+B)C\), a steady straight-line temperature.</div>
+    <div class="step" data-t="k = p² > 0">\(X=Ae^{px}+Be^{-px}\) and \(T=Ce^{c^2p^2t}\). The temperature grows without bound in time, which is not physical for a cooling bar.</div>
+    <div class="step" data-t="k = −p² < 0">\(X=A\cos px+B\sin px\) and \(T=Ce^{-c^2p^2t}\). It decays in time, which is the physically useful case:
+      \[u=(A\cos px+B\sin px)\,Ce^{-c^2p^2t}\]</div>
+    <div class="step" data-t="Boundary">With \(u(0,t)=u(L,t)=0\): \(A=0\) and \(\sin pL=0\), so \(p=\frac{n\pi}{L}\). Superpose: \(u=\sum B_n\sin\frac{n\pi x}{L}e^{-c^2n^2\pi^2t/L^2}\).</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Why only k &lt; 0 survives the boundary conditions X(0) = X(L) = 0</b></div>
+    <canvas class="plot" id="sv"></canvas>
+    <div class="controls">
+      <label class="ctl">case <select id="svC"><option value="neg">k = −p² (oscillating)</option><option value="zero">k = 0 (straight line)</option><option value="pos">k = p² (exponential)</option></select></label>
+      <label class="ctl">p <input type="range" id="svp" min="0.2" max="5" step="0.01" value="2.3"><output></output></label>
+    </div>
+    <div class="readout" id="svR"></div>
+  </div>
+</section>
+
+<section class="card" id="laplace2d">
+  <h2><span class="num">3.4</span> Steady-state heat in a plate: Laplace's equation</h2>
+  <p class="sub">\(\theta_{xx}+\theta_{yy}=0\) means no time dependence. The edges decide everything.</p>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Assumptions</span>Uniform conductivity. Thin plate with insulated faces. Steady state, so nothing depends on time.</div>
+    <div class="box thm"><span class="lbl">Notes' result, top edge at 100 °C</span>\[\theta=\sum_{n\,odd}\frac{400}{n\pi\sinh\frac{n\pi b}{a}}\sin\frac{n\pi x}a\sinh\frac{n\pi y}{a}\]</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Temperature map: hover to read θ(x, y)</b><span class="legend"><span>cold</span><i style="width:80px;height:8px;background:linear-gradient(90deg,#000004,#65156e,#d44842,#fac127,#fcffa4)"></i><span>hot</span></span></div>
+    <canvas class="plot tall" id="lp"></canvas>
+    <div class="controls">
+      <label class="ctl">problem <select id="lpP">
+        <option value="notes">Notes: top edge 100 °C (a × b plate)</option>
+        <option value="e25">2025 exam Q3a: bottom U = sinh π sin πx</option>
+        <option value="t5">Tutorial Q5: bottom u = x(4 − x), 4 × 2</option>
+        <option value="e312">Ex 3.12: semi-infinite, 100 sin(πx/8)</option>
+        <option value="t4">Tutorial Q4: semi-infinite, 80 °C, width 50</option></select></label>
+      <label class="ctl">N terms <input type="range" id="lpN" min="1" max="40" step="1" value="15"><output></output></label>
+    </div>
+    <div class="readout" id="lpR"></div>
+  </div>
+  <h3>2025 exam Q3(a) in 5 steps (13 marks)</h3>
+  <div class="steps">
+    <div class="step">\(U=X(x)Y(y)\Rightarrow\frac{X''}{X}=-\frac{Y''}{Y}=-k^2\), so \(X''+k^2X=0\) and \(Y''-k^2Y=0\).</div>
+    <div class="step">\(U(0,y)=U(1,y)=0\Rightarrow X=\sin n\pi x\) with \(k=n\pi\).</div>
+    <div class="step">\(U(x,1)=0\Rightarrow\) choose \(Y=\sinh\big(n\pi(1-y)\big)\), which is already zero at \(y=1\).</div>
+    <div class="step">\(U=\sum A_n\sin n\pi x\,\sinh n\pi(1-y)\). At \(y=0\): \(\sum A_n\sinh(n\pi)\sin n\pi x=\sinh\pi\sin\pi x\).</div>
+    <div class="step">Compare coefficients: \(A_1=1\) and every other \(A_n=0\). \(\boxed{U(x,y)=\sin(\pi x)\sinh\big(\pi(1-y)\big)}\)</div>
+  </div>
+</section>
+
+<section class="card" id="polar">
+  <h2><span class="num">3.5</span> Laplace's equation in polar coordinates</h2>
+  <p class="sub">\(r^2T_{rr}+rT_r+T_{\theta\theta}=0\): semicircular plate, Exercise 3.14</p>
+  <div class="steps">
+    <div class="step">\(T=R(r)\Theta(\theta)\Rightarrow\frac{r^2R''+rR'}{R}=-\frac{\Theta''}{\Theta}=h\).</div>
+    <div class="step">\(\Theta(0)=\Theta(\pi)=0\Rightarrow h=n^2\), \(\Theta_n=\sin n\theta\).</div>
+    <div class="step">Radial equation \(r^2R''+rR'-n^2R=0\) is Euler–Cauchy: \(R=A_nr^n+B_nr^{-n}\). It must stay finite at \(r=0\), so \(B_n=0\).</div>
+    <div class="step">\(T(a,\theta)=T_0\): the sine series of a constant gives \(A_na^n=\frac{2T_0}{n\pi}(1-(-1)^n)\).</div>
+    <div class="step">\[T=\frac{4T_0}{\pi}\sum_{m=0}^\infty\frac1{2m+1}\left(\frac ra\right)^{2m+1}\sin(2m+1)\theta\]</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Semicircular plate: hot rim, cold diameter</b></div>
+    <canvas class="plot" id="pol" style="height:360px"></canvas>
+    <div class="controls">
+      <label class="ctl">problem <select id="polP"><option value="semi">Ex 3.14 semicircle, rim T₀</option><option value="t6">Tutorial Q6 disk, T(1,θ) = sin2θ − 4cosθ</option></select></label>
+      <label class="ctl">N <input type="range" id="polN" min="1" max="40" step="1" value="12"><output></output></label></div>
+    <div class="readout" id="polR"></div>
+  </div>
+</section>
+
+<section class="card" id="heat1d">
+  <h2><span class="num">3.6</span> Heat flow in one dimension</h2>
+  <p class="sub">\(\theta_{xx}=\frac1k\theta_t\): each sine mode dies at its own rate \(e^{-kn^2\pi^2t/l^2}\)</p>
+  <div class="box thm"><span class="lbl">Example 3.15, ends held at 0</span>
+  \[\theta(x,t)=\sum_{r=1}^\infty B_r\sin\frac{r\pi x}l\,e^{-r^2\pi^2kt/l^2},\qquad B_r=\frac2l\int_0^lf(x)\sin\frac{r\pi x}{l}dx\]
+  High harmonics decay fastest, so sharp corners smooth out almost immediately.</div>
+  <div class="lab">
+    <div class="lab-h"><b>Cooling bar: press play</b><span class="ctl">t = <output id="htT">0</output></span></div>
+    <canvas class="plot short" id="htBar" style="height:90px"></canvas>
+    <canvas class="plot" id="htP" style="margin-top:8px"></canvas>
+    <div class="controls">
+      <label class="ctl">problem <select id="htC">
+        <option value="e21">2021 exam Q3b: bar length π at 100 °C, ends 0 °C, c = 1</option>
+        <option value="t7">Tutorial Q7: x(10 − x), k = 4, length 10</option>
+        <option value="e316">Ex 3.16: ends 20/40 then switched to 50/10</option></select></label>
+      <button id="htPlay" class="pri">▶ play</button>
+      <label class="ctl">speed <input type="range" id="htS" min="0.2" max="3" step="0.1" value="1"><output></output></label>
+    </div>
+    <div class="readout" id="htR"></div>
+  </div>
+  <h3>2021 exam Q3(b) (13 marks)</h3>
+  <div class="steps">
+    <div class="step">\(u_t=u_{xx}\) on \(0&lt;x&lt;\pi\), \(u(0,t)=u(\pi,t)=0\), \(u(x,0)=100\).</div>
+    <div class="step">From 3.3, the solution that satisfies the BCs is \(u=\sum B_n\sin nx\,e^{-n^2t}\).</div>
+    <div class="step">\(B_n=\frac2\pi\int_0^\pi100\sin nx\,dx=\frac{200}{n\pi}\big(1-(-1)^n\big)\). That is \(\frac{400}{n\pi}\) for odd \(n\) and 0 for even \(n\).</div>
+    <div class="step">\[\boxed{u(x,t)=\frac{400}{\pi}\sum_{m=0}^\infty\frac{\sin(2m+1)x}{2m+1}e^{-(2m+1)^2t}}\]</div>
+  </div>
+  <div class="box def"><span class="lbl">Ex 3.16 · non-zero ends</span>First find the new steady state \(u_s=50-\frac{40x}{L}\). Then \(v=u-u_s\) has zero ends and starts at \(v(x,0)=(20+\frac{20x}L)-u_s=-30+\frac{60x}L\). Solve for \(v\) as before: \(B_n=-\frac{60(1+(-1)^n)}{n\pi}\), so only even \(n\) survive.</div>
+</section>
+
+<section class="card" id="wave">
+  <h2><span class="num">3.7</span> The vibrating string: the wave equation</h2>
+  <p class="sub">\(y_{tt}=c^2y_{xx}\): every mode is a standing wave \(\sin\frac{n\pi x}L\cos\frac{n\pi ct}L\)</p>
+  <div class="steps">
+    <div class="step" data-t="2022 Q3a">\(y=X(x)T(t)\Rightarrow\frac{X''}X=\frac{T''}{c^2T}=-p^2\). This gives \(X=A\cos px+B\sin px\) and \(T=C\cos cpt+D\sin cpt\).</div>
+    <div class="step">Fixed ends \(y(0,t)=y(L,t)=0\Rightarrow A=0\) and \(p=\frac{n\pi}L\).</div>
+    <div class="step">\[y=\sum_{n=1}^\infty\sin\frac{n\pi x}L\left(C_n\cos\frac{n\pi ct}L+D_n\sin\frac{n\pi ct}L\right)\]</div>
+    <div class="step">Initial shape \(y(x,0)=f(x)\Rightarrow C_n=\frac2L\int_0^Lf\sin\frac{n\pi x}Ldx\).<br>Initial velocity \(y_t(x,0)=g(x)\Rightarrow D_n\frac{n\pi c}{L}=\frac2L\int_0^Lg\sin\frac{n\pi x}Ldx\).</div>
+    <div class="step" data-t="2022 Q3b">\(f=200\sin\frac{4\pi x}l\) and \(g=0\). The shape is already mode 4, so \(C_4=200\) and every other coefficient is 0: \(y=200\sin\frac{4\pi x}l\cos\frac{4\pi ct}l\) ✔.</div>
+    <div class="step" data-t="2022 Q3c">\(f=0\), \(g=100\sin\frac{\pi x}l\). Only \(D_1\): \(D_1\frac{\pi c}l=100\), so \(y=\frac{100l}{\pi c}\sin\frac{\pi x}l\sin\frac{\pi ct}l\).</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>String simulator</b><span class="ctl">t = <output id="wvT">0</output></span></div>
+    <canvas class="plot" id="wv"></canvas>
+    <div class="controls">
+      <label class="ctl">problem <select id="wvP">
+        <option value="q3b">2022 Q3b: 200 sin(4πx/l) released at rest</option>
+        <option value="q3c">2022 Q3c: flat string, velocity 100 sin(πx/l)</option>
+        <option value="pluck">Ex 3.18: centre plucked 2 cm, L = 10</option>
+        <option value="mode">Single mode n (choose below)</option></select></label>
+      <label class="ctl">n <input type="range" id="wvn" min="1" max="8" step="1" value="2"><output></output></label>
+      <label class="ctl">c <input type="range" id="wvc" min="0.2" max="3" step="0.1" value="1"><output></output></label>
+      <label class="ctl"><input type="checkbox" id="wvG" checked> ghost trail</label>
+    </div>
+    <div class="readout" id="wvR"></div>
+  </div>
+</section>
+
+<section class="card" id="quiz">
+  <h2><span class="num">✓</span> Test yourself</h2>
+  <div id="q3"></div>
+</section>
+
+</main></div>
+<footer>MA2014 Visual Lab · Chapter 3 · PDEs</footer>
+<script src="js/common.js"></script>
+<script src="js/pde.js"></script>
+</body></html>

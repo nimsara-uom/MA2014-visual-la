@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Formula Sheet · MA2014 Visual Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<style>
+ .sheet{columns:2 480px;column-gap:20px}
+ .sheet section.card{break-inside:avoid;padding:18px 20px}
+ .sheet td{font-size:.92rem}
+ @media print{nav.top,footer,.mark,.noprint{display:none!important} body{background:#fff;color:#000} section.card{box-shadow:none;border:1px solid #999;background:#fff} .box{background:#fff} h2,h3,th{color:#000!important}}
+</style>
+</head>
+<body data-page="sheet">
+<div class="wrap single"><main>
+<div class="hero"><span class="chip">REVISION</span><h1>Formula sheet</h1><p>Everything from the five chapters on one page. Press <kbd>Ctrl</kbd>+<kbd>P</kbd> for a print-friendly version.</p></div>
+<div class="sheet">
+
+<section class="card ch1"><h2>1 · Laplace</h2>
+<table class="t"><tr><th>f(t)</th><th>F(s)</th></tr>
+<tr><td>\(1,\ t^n\)</td><td>\(\frac1s,\ \frac{n!}{s^{n+1}}\)</td></tr>
+<tr><td>\(e^{at}\)</td><td>\(\frac1{s-a}\)</td></tr>
+<tr><td>\(\sin at,\ \cos at\)</td><td>\(\frac a{s^2+a^2},\ \frac s{s^2+a^2}\)</td></tr>
+<tr><td>\(\sinh at,\ \cosh at\)</td><td>\(\frac a{s^2-a^2},\ \frac s{s^2-a^2}\)</td></tr>
+<tr><td>\(e^{at}f(t)\)</td><td>\(F(s-a)\)</td></tr>
+<tr><td>\(u(t-a)f(t-a)\)</td><td>\(e^{-as}F(s)\)</td></tr>
+<tr><td>\(\delta(t-a)\)</td><td>\(e^{-as}\)</td></tr>
+<tr><td>\(f(\alpha t)\)</td><td>\(\frac1\alpha F(s/\alpha)\)</td></tr>
+<tr><td>\(y',\ y''\)</td><td>\(sY-y_0,\ s^2Y-sy_0-y_0'\)</td></tr>
+<tr><td>\(\int_0^tf\)</td><td>\(F/s\)</td></tr>
+<tr><td>\(t^nf\)</td><td>\((-1)^nF^{(n)}(s)\)</td></tr>
+<tr><td>\(f/t\)</td><td>\(\int_s^\infty F\)</td></tr>
+<tr><td>periodic, T</td><td>\(\frac{\int_0^Te^{-st}f}{1-e^{-sT}}\)</td></tr>
+<tr><td>\(f*g=\int_0^tf(\tau)g(t-\tau)d\tau\)</td><td>\(FG\)</td></tr></table>
+<div class="box def">Transfer function \(H=Y/X\) (zero ICs). Impulse response \(h=\mathcal L^{-1}\{H\}\).</div></section>
+
+<section class="card ch2"><h2>2 · Fourier series (period 2ℓ)</h2>
+\[f\sim\tfrac{a_0}2+\sum a_n\cos\tfrac{n\pi x}\ell+b_n\sin\tfrac{n\pi x}\ell\]
+\[a_n=\tfrac1\ell\!\int_{-\ell}^{\ell}\!f\cos\tfrac{n\pi x}\ell,\quad b_n=\tfrac1\ell\!\int_{-\ell}^{\ell}\!f\sin\tfrac{n\pi x}\ell\]
+<div class="box def">Even: \(b_n=0\), \(a_n=\frac2\ell\int_0^\ell\). Odd: \(a_n=0\), \(b_n=\frac2\ell\int_0^\ell\). Half-range cosine is the even extension and half-range sine is the odd extension.</div>
+<div class="box def">At a jump the series gives \(\frac{f(x^-)+f(x^+)}2\).</div>
+\[\tfrac1\ell\int_{-\ell}^{\ell}f^2=\tfrac{a_0^2}2+\sum(a_n^2+b_n^2)\]
+\[c_n=\tfrac1{2\ell}\int_{-\ell}^{\ell}fe^{-in\pi x/\ell},\quad c_n=\tfrac{a_n-ib_n}2\]
+<div class="box tip">Useful integrals: \(\int_0^\pi x\sin nx=\frac{\pi(-1)^{n+1}}n\), \(\int_0^\pi x\cos nx=\frac{(-1)^n-1}{n^2}\), \(\int_0^\pi x^2\cos nx=\frac{2\pi(-1)^n}{n^2}\).<br>Known sums: \(\sum\frac1{n^2}=\frac{\pi^2}6\), \(\sum_{odd}\frac1{n^2}=\frac{\pi^2}8\), \(\sum\frac1{n^4}=\frac{\pi^4}{90}\).</div></section>
+
+<section class="card ch3"><h2>3 · PDEs</h2>
+<div class="box def">\(B^2-4AC\): \(&lt;0\) elliptic · \(=0\) parabolic · \(>0\) hyperbolic.</div>
+<table class="t"><tr><th>equation</th><th>separated solution (ends 0)</th></tr>
+<tr><td>Heat \(u_t=c^2u_{xx}\)</td><td>\(\sum B_n\sin\frac{n\pi x}Le^{-c^2n^2\pi^2t/L^2}\)</td></tr>
+<tr><td>Wave \(y_{tt}=c^2y_{xx}\)</td><td>\(\sum\sin\frac{n\pi x}L(C_n\cos+D_n\sin)\frac{n\pi ct}L\)</td></tr>
+<tr><td>Laplace, rectangle</td><td>\(\sum A_n\sin\frac{n\pi x}a\sinh\frac{n\pi y}a\)</td></tr>
+<tr><td>Laplace, semi-infinite</td><td>\(\sum A_n\sin\frac{n\pi x}ae^{-n\pi y/a}\)</td></tr>
+<tr><td>Laplace, polar</td><td>\(\sum r^n(a_n\cos n\theta+b_n\sin n\theta)\)</td></tr></table>
+<div class="box def">Coefficients: \(B_n=\frac2L\int_0^Lf\sin\frac{n\pi x}L\). For initial velocity \(g\): \(D_n\frac{n\pi c}L=\frac2L\int_0^Lg\sin\frac{n\pi x}{L}\). Sine series of a constant \(K\): \(\frac{2K(1-(-1)^n)}{n\pi}\).</div>
+<div class="box tip">Non-zero ends: subtract the steady line \(u_s\) first, then solve for \(u-u_s\).</div></section>
+
+<section class="card ch4"><h2>4 · Series solutions</h2>
+<div class="box def">Ordinary: \(P_0(a)\ne0\). Regular singular: \(P_0(a)=0\) with \((x-a)\frac{P_1}{P_0}\) and \((x-a)^2\frac{P_2}{P_0}\) analytic.</div>
+\[y'=\sum(n+1)a_{n+1}x^n,\quad y''=\sum(n+2)(n+1)a_{n+2}x^n\]
+<div class="box def">Frobenius \(y=\sum a_nx^{n+m}\). Lowest power gives the indicial equation \(m(m-1)+p_0m+q_0=0\).<br>Case 1 non-integer gap: two series. Case 2 equal roots: \(y_1\ln x+\dots\). Case 3 integer gap: \(Cy_1\ln x+\dots\), and C may be 0.</div>
+\[J_n=\sum_r\frac{(-1)^r}{r!(n+r)!}\left(\frac x2\right)^{2r+n}\]
+\[P_n=\frac{1}{2^nn!}\frac{d^n}{dx^n}(x^2-1)^n,\quad\int_{-1}^1P_mP_n=0\]
+<div class="box tip">\(P_2=\frac12(3x^2-1)\), \(P_3=\frac12(5x^3-3x)\), \(P_4=\frac18(35x^4-30x^2+3)\), \(P_5=\frac18(63x^5-70x^3+15x)\).</div></section>
+
+<section class="card ch5"><h2>5 · Fourier transform</h2>
+\[F=\int_{-\infty}^\infty fe^{-i\omega t}dt,\qquad f=\frac1{2\pi}\int_{-\infty}^\infty Fe^{i\omega t}d\omega\]
+<table class="t"><tr><th>f(t)</th><th>F(ω)</th></tr>
+<tr><td>\(u(t)e^{-\alpha t}\)</td><td>\(\frac1{\alpha+i\omega}\)</td></tr>
+<tr><td>box \(|t|\le\alpha\)</td><td>\(\frac{2\sin\alpha\omega}{\omega}\)</td></tr>
+<tr><td>\(e^{-\alpha|t|}\)</td><td>\(\frac{2\alpha}{\alpha^2+\omega^2}\)</td></tr>
+<tr><td>\(e^{-\alpha t^2}\)</td><td>\(\sqrt{\pi/\alpha}\,e^{-\omega^2/4\alpha}\)</td></tr>
+<tr><td>\(\delta(t-a),\ 1\)</td><td>\(e^{-i\omega a},\ 2\pi\delta(\omega)\)</td></tr>
+<tr><td>\(\cos at\)</td><td>\(\pi[\delta(\omega-a)+\delta(\omega+a)]\)</td></tr>
+<tr><td>\(\operatorname{sgn}t\)</td><td>\(\frac{2}{i\omega}\)</td></tr></table>
+<table class="t"><tr><th>property</th><th>result</th></tr>
+<tr><td>\(f(t-t_0)\)</td><td>\(e^{-i\omega t_0}F\)</td></tr><tr><td>\(e^{iat}f\)</td><td>\(F(\omega-a)\)</td></tr>
+<tr><td>\(f(\alpha t)\)</td><td>\(\frac1\alpha F(\omega/\alpha)\)</td></tr><tr><td>\(f'\), \(tf\)</td><td>\(i\omega F\), \(iF'\)</td></tr>
+<tr><td>\(f*g\)</td><td>\(FG\)</td></tr><tr><td>\(F(t)\)</td><td>\(2\pi f(-\omega)\)</td></tr></table>
+<div class="box def">\(F_c=\int_0^\infty f\cos\omega t\) and \(F_s=\int_0^\infty f\sin\omega t\), with inverses \(\frac2\pi\int_0^\infty\). In a PDE, \(\mathcal F_x\{u_{xx}\}=-\omega^2\hat u\) and \(\mathcal F_s\{u_{xx}\}=-\omega^2U_s\) (when \(u(0)=0\)).</div></section>
+</div>
+</main></div>
+<footer>MA2014 Visual Lab · Formula sheet</footer>
+<script src="js/common.js"></script>
+</body></html>

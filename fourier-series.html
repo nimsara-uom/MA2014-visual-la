@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ch 2 · Fourier Series · MA2014 Visual Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="ch2" data-page="fseries">
+<div class="wrap"><aside class="toc"></aside><main>
+
+<div class="hero">
+  <span class="chip">CHAPTER 2</span>
+  <h1>Fourier Series</h1>
+  <p>Any reasonable periodic wave is a sum of sines and cosines. You find how much of each frequency is inside it (the <b>coefficients</b>), then add them back up. Below, you can watch the sum build itself term by term.</p>
+</div>
+
+<section class="card" id="evenodd">
+  <h2><span class="num">2.1</span> Even and odd functions</h2>
+  <p class="sub">Symmetry is your biggest shortcut. It kills half of the coefficients before you start.</p>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Even · mirror in the y-axis</span>\(f(-x)=f(x)\)<br>\(\int_{-a}^af\,dx=2\int_0^af\,dx\)<br>Examples: \(x^2,\ |x|,\ \cos x\)</div>
+    <div class="box def"><span class="lbl">Odd · rotate 180° about the origin</span>\(f(-x)=-f(x)\)<br>\(\int_{-a}^af\,dx=0\)<br>Examples: \(x,\ x^3,\ \sin x\)</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Split any function into an even part plus an odd part</b>
+      <div class="legend"><span><i style="background:#ffd166"></i>f(x)</span><span><i style="background:#9aa6c7"></i>f(−x) mirror</span><span><i style="background:#06d6a0"></i>even part f<sub>e</sub></span><span><i style="background:#ff7a59"></i>odd part f<sub>o</sub></span></div></div>
+    <canvas class="plot" id="eo"></canvas>
+    <div class="controls">
+      <label class="ctl">f(x) = <select id="eoF"><option value="ex">eˣ</option><option value="x2">x² − 3</option><option value="x5">x + 5</option><option value="cub">2x³ − x</option><option value="abs">|x|</option><option value="cs">cos x + sin x</option></select></label>
+      <label class="ctl"><input type="checkbox" id="eoS" checked> show the split</label>
+    </div>
+    <div class="readout" id="eoR"></div>
+  </div>
+  <div class="box thm"><span class="lbl">Theorem 2.4 (like multiplying signs)</span>
+    even × even = <b>even</b> · odd × odd = <b>even</b> · even × odd = <b>odd</b>.<br>
+    Every \(f\) splits as \(f=f_e+f_o\) with \(f_e=\frac{f(x)+f(-x)}2\) and \(f_o=\frac{f(x)-f(-x)}2\). For \(e^x\) that is \(\cosh x+\sinh x\).</div>
+</section>
+
+<section class="card" id="ortho">
+  <h2><span class="num">2.2</span> Periodic and orthogonal functions</h2>
+  <p class="sub">Why the coefficient formulas work: different harmonics cancel out when you integrate their product</p>
+  <div class="box def"><span class="lbl">Definitions 2.6–2.7</span>\(f\) is <b>p-periodic</b> if \(f(x+p)=f(x)\). The smallest such \(p\) is the <b>fundamental period</b>. A constant has no fundamental period.<br>
+  \(f,g\) are <b>orthogonal</b> on \([a,b]\) if \(\int_a^bf\,g\,dx=0\).</div>
+  <div class="lab">
+    <div class="lab-h"><b>Orthogonality lab: the area of the product is 0 unless the frequencies match</b>
+      <div class="legend"><span><i style="background:#4cc9f0"></i>first</span><span><i style="background:#ff7a59"></i>second</span><span><i style="background:#ffd166"></i>product (shaded area)</span></div></div>
+    <canvas class="plot" id="orth"></canvas>
+    <div class="controls">
+      <label class="ctl"><select id="orA"><option>sin</option><option>cos</option></select>( n x ), n <input type="range" id="orn" min="1" max="6" step="1" value="2"><output></output></label>
+      <label class="ctl"><select id="orB"><option>sin</option><option selected>cos</option></select>( m x ), m <input type="range" id="orm" min="1" max="6" step="1" value="3"><output></output></label>
+    </div>
+    <div class="readout" id="orR"></div>
+  </div>
+  <div class="box tip"><span class="lbl">The table you get</span>Over one period \(T\): \(\int\sin\cdot\sin=\int\cos\cdot\cos=0\) when \(n\ne m\). \(\int\sin\cdot\cos=0\) always. \(\int\sin^2=\int\cos^2=\frac T2\).</div>
+</section>
+
+<section class="card" id="series">
+  <h2><span class="num">2.3</span> The Fourier series and its coefficients</h2>
+  <p class="sub">Definition 2.9 for period \(2\pi\)</p>
+  <div class="box def"><span class="lbl">Fourier series</span>
+    \[f(x)\sim\frac{a_0}{2}+\sum_{n=1}^\infty\big(a_n\cos nx+b_n\sin nx\big)\]
+    \[a_0=\frac1\pi\int_{-\pi}^{\pi}f\,dx,\quad a_n=\frac1\pi\int_{-\pi}^{\pi}f\cos nx\,dx,\quad b_n=\frac1\pi\int_{-\pi}^{\pi}f\sin nx\,dx\]
+    \(\frac{a_0}{2}\) is the <b>average value</b> (the DC level). Any interval of length \(2\pi\) works for the integrals.</div>
+  <div class="lab">
+    <div class="lab-h"><b>Fourier builder: add harmonics and watch the wave form</b>
+      <div class="legend"><span><i style="background:#9aa6c7"></i>f(x) periodic extension</span><span><i style="background:#ffd166"></i>partial sum S<sub>N</sub></span><span><i style="background:#ff7a59"></i>newest harmonic</span></div></div>
+    <canvas class="plot tall" id="fb"></canvas>
+    <canvas class="plot short" id="fbC" style="margin-top:8px"></canvas>
+    <div class="legend"><span><i style="background:#06d6a0"></i>aₙ (cos amounts)</span><span><i style="background:#b388ff"></i>bₙ (sin amounts)</span></div>
+    <div class="controls">
+      <label class="ctl">function <select id="fbF"></select></label>
+      <label class="ctl">N terms <input type="range" id="fbN" min="0" max="60" step="1" value="5"><output></output></label>
+      <button id="fbPlay">▶ build up</button>
+    </div>
+    <div class="readout" id="fbR"></div>
+  </div>
+  <div class="box tip"><span class="lbl">Gibbs phenomenon</span>Pick the square wave and push N to 60. The overshoot next to each jump never disappears. It stays near 9% of the jump size and just gets narrower.</div>
+  <h3>Example 2.12 worked: f = x + x² on (−π, π)</h3>
+  <div class="steps">
+    <div class="step">Split it. \(x\) is odd, so it only feeds \(b_n\). \(x^2\) is even, so it only feeds \(a_0,a_n\).</div>
+    <div class="step">\(a_0=\frac1\pi\int_{-\pi}^\pi x^2dx=\frac{2\pi^2}3\). Integrating by parts twice gives \(a_n=\frac2\pi\int_0^\pi x^2\cos nx\,dx=\frac{4(-1)^n}{n^2}\).</div>
+    <div class="step">\(b_n=\frac2\pi\int_0^\pi x\sin nx\,dx=\frac{2(-1)^{n+1}}{n}\).</div>
+    <div class="step">\(x+x^2=\frac{\pi^2}3+\sum\left(\frac{4(-1)^n}{n^2}\cos nx+\frac{2(-1)^{n+1}}{n}\sin nx\right)\)</div>
+    <div class="step">At \(x=\pi\) there is a jump, from \(\pi+\pi^2\) on the left to \(-\pi+\pi^2\) on the right. Dirichlet says the series gives the average, \(\pi^2\). So \(\pi^2=\frac{\pi^2}{3}+4\sum\frac1{n^2}\), giving \(\boxed{\sum\frac1{n^2}=\frac{\pi^2}6}\).</div>
+  </div>
+</section>
+
+<section class="card" id="dirichlet">
+  <h2><span class="num">2.4</span> Dirichlet conditions: what the series converges to</h2>
+  <p class="sub">At a jump, the series always lands exactly halfway</p>
+  <div class="box thm"><span class="lbl">Theorem 2.13</span>If over one period \(f\) is absolutely integrable, has finitely many maxima and minima, and finitely many finite jumps, then the series converges to
+  \[\frac{f(x^-)+f(x^+)}{2}\]
+  At every point where \(f\) is continuous, this is just \(f(x)\).</div>
+  <div class="lab">
+    <div class="lab-h"><b>Zoom into a jump: every partial sum passes through the midpoint</b></div>
+    <canvas class="plot" id="dir"></canvas>
+    <div class="controls"><label class="ctl">N <input type="range" id="dirN" min="1" max="80" step="1" value="10"><output></output></label></div>
+    <div class="readout" id="dirR"></div>
+  </div>
+  <div class="box def"><span class="lbl">Example 2.14</span>For \(f=x\) on \((-\pi,\pi)\), \(x=2\sum\frac{(-1)^{n+1}}n\sin nx\). At \(x=\pi\) the left limit is \(\pi\) and the right limit is \(-\pi\), so the series equals \(0\). Every \(\sin n\pi=0\) confirms it.</div>
+</section>
+
+<section class="card" id="piecewise">
+  <h2><span class="num">2.5</span> Piecewise functions, plus even and odd shortcuts</h2>
+  <p class="sub">Split each integral at the break points. Use symmetry to skip work.</p>
+  <div class="grid2">
+    <div class="box thm"><span class="lbl">Odd f (2.6.1)</span>\(a_0=a_n=0\)<br>\(b_n=\frac2\pi\int_0^\pi f\sin nx\,dx\)<br>The series has <b>sines only</b>.</div>
+    <div class="box thm"><span class="lbl">Even f (2.6.2)</span>\(b_n=0\)<br>\(a_n=\frac2\pi\int_0^\pi f\cos nx\,dx\)<br>The series has <b>cosines only</b>.</div>
+  </div>
+  <div class="steps">
+    <div class="step" data-t="Ex 2.15">\(f=1\) on \((0,\pi)\) and \(-1\) on \((\pi,2\pi)\). This is odd about 0, so \(a_n=0\).</div>
+    <div class="step">\(b_n=\frac1\pi\left[\int_0^\pi\sin nx\,dx-\int_\pi^{2\pi}\sin nx\,dx\right]=\frac{2(1-(-1)^n)}{n\pi}\). That is \(\frac4{n\pi}\) for odd \(n\) and 0 for even \(n\).</div>
+    <div class="step">\(f=\frac4\pi\left(\sin x+\frac{\sin3x}3+\frac{\sin5x}5+\cdots\right)\). Pick "square wave" in the builder above to see it.</div>
+    <div class="step" data-t="Ex 2.19">Triangle \(1\mp\frac{2x}\pi\) is even. \(a_0=0\) and \(a_n=\frac{4(1-(-1)^n)}{\pi^2n^2}\). At \(x=0\): \(1=\frac8{\pi^2}\sum_{odd}\frac1{n^2}\), so \(\sum\frac1{(2n-1)^2}=\frac{\pi^2}8\).</div>
+  </div>
+</section>
+
+<section class="card" id="halfrange">
+  <h2><span class="num">2.6</span> Half-range series</h2>
+  <p class="sub">\(f\) is only given on \((0,\ell)\). You choose how to fill in \((-\ell,0)\).</p>
+  <div class="grid2">
+    <div class="box def"><span class="lbl">Cosine series = even extension</span>\[a_n=\frac2\ell\int_0^\ell f\cos\frac{n\pi x}\ell dx,\quad b_n=0\]</div>
+    <div class="box def"><span class="lbl">Sine series = odd extension</span>\[b_n=\frac2\ell\int_0^\ell f\sin\frac{n\pi x}\ell dx,\quad a_n=0\]</div>
+  </div>
+  <div class="lab">
+    <div class="lab-h"><b>Mirror or flip? Build the extension, then the series</b>
+      <div class="legend"><span><i style="background:#ffd166"></i>given piece on (0, ℓ)</span><span><i style="background:#9aa6c7"></i>extension</span><span><i style="background:#06d6a0"></i>half-range series S<sub>N</sub></span></div></div>
+    <canvas class="plot tall" id="hr"></canvas>
+    <div class="controls">
+      <label class="ctl">f on (0, ℓ) <select id="hrF"></select></label>
+      <label class="ctl">type <select id="hrT"><option value="cos">cosine (even)</option><option value="sin">sine (odd)</option></select></label>
+      <label class="ctl">N <input type="range" id="hrN" min="1" max="40" step="1" value="6"><output></output></label>
+    </div>
+    <div class="readout" id="hrR"></div>
+  </div>
+  <div class="box tip"><span class="lbl">Which one converges faster?</span>An even extension of \(2x-1\) has no jumps, so its coefficients fall like \(1/n^2\). An odd extension creates jumps at \(0\) and \(\ell\), so they only fall like \(1/n\). Toggle and compare.</div>
+</section>
+
+<section class="card" id="general">
+  <h2><span class="num">2.7</span> General period 2ℓ</h2>
+  <p class="sub">Replace \(nx\) with \(\frac{n\pi x}{\ell}\) and \(\frac1\pi\) with \(\frac1\ell\)</p>
+  <div class="box def"><span class="lbl">Formula (2.3)</span>
+    \[f\sim\frac{a_0}2+\sum\left(a_n\cos\frac{n\pi x}\ell+b_n\sin\frac{n\pi x}\ell\right),\qquad a_n=\frac1\ell\int_{-\ell}^{\ell}f\cos\frac{n\pi x}\ell dx,\quad b_n=\frac1\ell\int_{-\ell}^{\ell}f\sin\frac{n\pi x}\ell dx\]</div>
+  <div class="steps">
+    <div class="step" data-t="Ex 2.24">\(f=|x|\) on \((-2,2)\), so \(\ell=2\). It is even, so \(b_n=0\).</div>
+    <div class="step">\(a_0=\frac22\int_0^2x\,dx=2\). \(a_n=\int_0^2x\cos\frac{n\pi x}2dx=\frac{4((-1)^n-1)}{n^2\pi^2}\).</div>
+    <div class="step">\(|x|=1-\frac8{\pi^2}\left(\cos\frac{\pi x}2+\frac19\cos\frac{3\pi x}2+\cdots\right)\). Pick "|x|, period 4" in the builder.</div>
+  </div>
+</section>
+
+<section class="card" id="parseval">
+  <h2><span class="num">2.8</span> Parseval's formula: energy in equals the sum of energies in each harmonic</h2>
+  <p class="sub">The trick behind \(\sum 1/n^2\) and \(\sum 1/n^4\) questions</p>
+  <div class="box thm"><span class="lbl">Parseval (2.4), period 2ℓ</span>
+  \[\frac1\ell\int_{-\ell}^{\ell}f^2\,dx=\frac{a_0^2}{2}+\sum_{n=1}^\infty\left(a_n^2+b_n^2\right)\]
+  Half-range cosine: \(\frac2\ell\int_0^\ell f^2=\frac{a_0^2}2+\sum a_n^2\). Half-range sine: \(\frac2\ell\int_0^\ell f^2=\sum b_n^2\).</div>
+  <div class="lab">
+    <div class="lab-h"><b>Energy bars: each harmonic adds its share until the total is reached</b></div>
+    <canvas class="plot" id="pv"></canvas>
+    <div class="controls">
+      <label class="ctl">function <select id="pvF"></select></label>
+      <label class="ctl">N <input type="range" id="pvN" min="1" max="40" step="1" value="10"><output></output></label>
+    </div>
+    <div class="readout" id="pvR"></div>
+  </div>
+  <div class="steps">
+    <div class="step" data-t="Ex 2.26">Take \(f=x^2\): \(a_0=\frac{2\pi^2}3\), \(a_n=\frac{4(-1)^n}{n^2}\), \(b_n=0\).</div>
+    <div class="step">Left side: \(\frac1\pi\int_{-\pi}^\pi x^4dx=\frac{2\pi^4}5\).</div>
+    <div class="step">Right side: \(\frac{1}{2}\cdot\frac{4\pi^4}9+16\sum\frac1{n^4}\).</div>
+    <div class="step">\(16\sum\frac1{n^4}=\frac{2\pi^4}5-\frac{2\pi^4}9=\frac{8\pi^4}{45}\), so \(\boxed{\sum\frac1{n^4}=\frac{\pi^4}{90}}\).</div>
+  </div>
+</section>
+
+<section class="card" id="complex">
+  <h2><span class="num">2.9</span> Complex form of the Fourier series</h2>
+  <p class="sub">One coefficient formula instead of three</p>
+  <div class="box def"><span class="lbl">Complex form</span>
+  \[f(x)\sim\sum_{n=-\infty}^{\infty}c_ne^{in\pi x/\ell},\qquad c_n=\frac1{2\ell}\int_{-\ell}^{\ell}f(x)e^{-in\pi x/\ell}dx\]
+  Link to the real form: \(c_0=\frac{a_0}2\), \(c_n=\frac{a_n-ib_n}2\), \(c_{-n}=\frac{a_n+ib_n}2\).</div>
+  <div class="lab">
+    <div class="lab-h"><b>Two-sided spectrum |cₙ| and the rebuilt signal</b></div>
+    <div class="grid2"><canvas class="plot" id="cxS"></canvas><canvas class="plot" id="cxF"></canvas></div>
+    <div class="controls">
+      <label class="ctl">function <select id="cxP"><option value="ex">eˣ on (−1,1) (Ex 2.28)</option><option value="emx">e^{−x} on (−1,1) (2022 exam)</option><option value="step">0 / 1 step (Ex 2.27)</option><option value="e2x">e^{2x} on (−π,π) (Tutorial)</option></select></label>
+      <label class="ctl">N <input type="range" id="cxN" min="1" max="30" step="1" value="8"><output></output></label>
+    </div>
+    <div class="readout" id="cxR"></div>
+  </div>
+</section>
+
+<section class="card" id="quiz">
+  <h2><span class="num">✓</span> Test yourself</h2>
+  <div id="q2"></div>
+</section>
+
+</main></div>
+<footer>MA2014 Visual Lab · Chapter 2 · Fourier Series</footer>
+<script src="js/common.js"></script>
+<script src="js/fseries.js"></script>
+</body></html>

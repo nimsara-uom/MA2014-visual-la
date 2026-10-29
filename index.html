@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MA2014 Differential Equations · Visual Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="home">
+<div class="wrap single"><main>
+
+<div class="hero">
+  <span class="chip">MA2014 · DIFFERENTIAL EQUATIONS · UNIVERSITY OF MORATUWA</span>
+  <h1>Learn every theory by <i>seeing</i> it.</h1>
+  <p>Five chapters, 40+ interactive labs, every past-paper question solved step by step. Drag sliders, press play, flip cards and reveal one step at a time. Tick "I understand this topic" as you go, and your progress is saved in this browser.</p>
+</div>
+
+<div class="tiles" id="tiles">
+  <a class="tile ch1" href="laplace.html" data-p="laplace"><div class="big">𝓛</div><h3>1 · Laplace Transform</h3>
+    <p>Turn ODEs into algebra. Shifts, steps, the Dirac delta, convolution, circuits and spring systems.</p>
+    <div class="tags"><span>s-shift</span><span>u(t−a)</span><span>δ(t)</span><span>convolution</span><span>RLC</span></div><div class="pbar"><i></i></div></a>
+  <a class="tile ch2" href="fourier-series.html" data-p="fseries"><div class="big">∿</div><h3>2 · Fourier Series</h3>
+    <p>Build any wave from sines and cosines. Watch the Gibbs overshoot. Use Parseval to sum π²/6.</p>
+    <div class="tags"><span>even/odd</span><span>half-range</span><span>Dirichlet</span><span>Parseval</span><span>complex</span></div><div class="pbar"><i></i></div></a>
+  <a class="tile ch3" href="pde.html" data-p="pde"><div class="big">∂</div><h3>3 · Partial Differential Equations</h3>
+    <p>Classify by \(B^2-4AC\), separate variables, then animate heat flow, plates and strings.</p>
+    <div class="tags"><span>elliptic/hyperbolic</span><span>heat</span><span>wave</span><span>Laplace</span></div><div class="pbar"><i></i></div></a>
+  <a class="tile ch4" href="series.html" data-p="series"><div class="big">Σ</div><h3>4 · Series Solutions and Frobenius</h3>
+    <p>Engines that solve any listed equation with exact fractions, plus Bessel and Legendre functions.</p>
+    <div class="tags"><span>ordinary points</span><span>indicial eq.</span><span>3 root cases</span><span>Jₙ</span><span>Pₙ</span></div><div class="pbar"><i></i></div></a>
+  <a class="tile ch5" href="fourier-transform.html" data-p="ftrans"><div class="big">𝓕</div><h3>5 · Fourier Transform</h3>
+    <p>Series become continuous spectra. Transform pairs, properties, and solving PDEs on infinite domains.</p>
+    <div class="tags"><span>pairs table</span><span>shift/scale</span><span>duality</span><span>heat on ℝ</span></div><div class="pbar"><i></i></div></a>
+  <a class="tile chx" href="exams.html"><div class="big">🎯</div><h3>Past papers, fully solved</h3>
+    <p>2023, 2024 and 2025 finals: every part, step by step, with a topic heat map of where the marks come from.</p>
+    <div class="tags"><span>12 questions</span><span>300 marks</span><span>linked to lessons</span></div></a>
+</div>
+
+<section class="card" style="margin-top:24px" id="plan">
+  <h2><span class="num">🗺</span> Suggested study path</h2>
+  <div class="flow">
+    <div class="node">1 · Laplace<br><small>tools for everything</small></div><div class="arr">→</div>
+    <div class="node">2 · Fourier series<br><small>needed for PDEs</small></div><div class="arr">→</div>
+    <div class="node">3 · PDEs<br><small>uses 1 and 2</small></div><div class="arr">→</div>
+    <div class="node">4 · Series<br><small>stand-alone, 25 marks</small></div><div class="arr">→</div>
+    <div class="node">5 · Fourier transform<br><small>extends 2</small></div><div class="arr">→</div>
+    <div class="node">🎯 Past papers<br><small>timed practice</small></div>
+  </div>
+  <div class="grid3">
+    <div class="box tip"><span class="lbl">How to use a lab</span>Read the boxed theorem. Then move one slider at a time and predict what will happen <i>before</i> you look.</div>
+    <div class="box tip"><span class="lbl">How to use step reveals</span>Cover the screen with your hand, write the next line on paper, then press <b>Next step</b> to check.</div>
+    <div class="box tip"><span class="lbl">Night before the exam</span>Use the <a href="formulas.html">formula sheet</a>. Then redo the past-paper steps without revealing them.</div>
+  </div>
+</section>
+</main></div>
+<footer>Built from your MA2014 Chapters 1–5 notes, tutorials and the 2023–2025 final papers. Math rendered with KaTeX (needs internet the first time).</footer>
+<script src="js/common.js"></script>
+<script>
+$$('#tiles .tile[data-p]').forEach(t=>{ const p=t.dataset.p; let d=0; const tot=+(localStorage.getItem('ma2014tot:'+p)||0);
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i); if(k.startsWith('ma2014:'+p+':')&&localStorage.getItem(k)==='1') d++;}
+  t.querySelector('.pbar i').style.width=tot?(100*d/tot)+'%':'0%'; if(tot) t.querySelector('h3').insertAdjacentHTML('beforeend',` <small style="font-size:.75rem;color:var(--muted)">${d}/${tot}</small>`); });
+</script>
+</body></html>

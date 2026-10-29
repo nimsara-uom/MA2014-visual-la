@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Past Papers, Fully Solved · MA2014 Visual Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+<style>
+ .papers{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+ .papers button{font-size:1rem;padding:10px 18px}
+ .papers button.on{background:var(--acc);color:#0b1020;font-weight:800}
+ .heat{border-collapse:separate;border-spacing:6px;width:100%}
+ .heat th{color:var(--muted);font-size:.8rem;font-weight:600;text-align:left}
+ .heat td{border-radius:10px;text-align:center;font-weight:800;padding:12px 6px;color:#0b1020}
+ .qnav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+ .qnav a{font-size:.8rem;padding:4px 10px;border-radius:999px;background:var(--card2);color:#fff;text-decoration:none}
+ .paper{display:none}.paper.on{display:block}
+</style>
+</head>
+<body class="chx" data-page="exams">
+<div class="wrap single"><main>
+
+<div class="hero">
+  <span class="chip">PAST PAPERS</span>
+  <h1>Every question, solved step by step</h1>
+  <p>Three MA2014 finals (Intakes 2021, 2022, 2023) with full solutions. Press <b>Next step</b> and try to write the next line yourself before you reveal it. Each question links back to the lesson that teaches it.</p>
+</div>
+
+<section class="card" id="map">
+  <h2><span class="num">📊</span> Where the marks come from</h2>
+  <p class="sub">Marks per topic in each paper. Brighter means more marks.</p>
+  <table class="heat" id="heat"></table>
+  <div class="box tip"><span class="lbl">Pattern</span><b>Laplace</b> and <b>series solutions</b> have appeared in every paper, at 25 marks each. Fourier series always shows up. The newest paper added <b>Fourier transforms</b> (22 marks), so expect them again. The two exact questions "\(xy''+y'+xy=0\) about \(x=0\)" appeared in both 2024 and 2025: learn that solution cold.</div>
+</section>
+
+<div class="papers">
+  <button data-p="p21" class="on">Nov 2023 · Intake 2021</button>
+  <button data-p="p22">Nov 2024 · Intake 2022</button>
+  <button data-p="p23">Nov 2025 · Intake 2023</button>
+</div>
+
+<!-- ====================== 2021 ====================== -->
+<div class="paper on" id="p21">
+<section class="card" id="a1">
+  <h2><span class="num">Q1</span> Laplace transform <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="laplace.html#tn">Lesson 1.3–1.4 →</a></p>
+  <div class="box exam"><span class="lbl">(a)(i) Prove \(\mathcal L\{f/t\}=\int_s^\infty F\,ds\) · (a)(ii) Prove \(\mathcal L\{\int_0^tf\}=F/s\) · 10 marks</span></div>
+  <div class="steps">
+    <div class="step" data-t="(a)(i)">\(\int_s^\infty F(p)dp=\int_s^\infty\int_0^\infty f(t)e^{-pt}dt\,dp=\int_0^\infty f(t)\left[\frac{-e^{-pt}}{t}\right]_{p=s}^{\infty}dt=\int_0^\infty\frac{f(t)}te^{-st}dt\) ∎</div>
+    <div class="step" data-t="(a)(ii)">\(g=\int_0^tf\): \(g(0)=0\) and \(g'=f\). So \(F=\mathcal L\{g'\}=sG-g(0)=sG\), which gives \(G=F/s\) ∎</div>
+  </div>
+  <div class="box exam"><span class="lbl">(b)(i) \(\mathcal L\{\int_0^{t/2}\frac{1-e^{-2x}}{x}dx\}=\frac{\ln(1+1/s)}s\) · (b)(ii) \(\int_0^\infty\int_0^te^{-t}\frac{\sin u}{u}du\,dt=\frac\pi4\) · 10 marks</span></div>
+  <div class="steps">
+    <div class="step" data-t="(b)(i)">\(\mathcal L\{\frac{1-e^{-2t}}{t}\}=\int_s^\infty(\frac1p-\frac1{p+2})dp=\ln\frac{s+2}{s}\).</div>
+    <div class="step" data-t="(b)(i)">\(g(t)=\int_0^t\): \(G=\frac1s\ln(1+\frac2s)\). Then \(g(t/2)\): \(\mathcal L=2G(2s)=\frac{\ln(1+1/s)}{s}\) ∎</div>
+    <div class="step" data-t="(b)(ii)">The double integral is \(\mathcal L\{g\}(1)\) with \(g=\int_0^t\frac{\sin u}udu\). \(\mathcal L\{\frac{\sin t}t\}=\tan^{-1}\frac1s\), so \(\mathcal L\{g\}=\frac1s\tan^{-1}\frac1s\). At \(s=1\) this is \(\frac\pi4\) ∎</div>
+  </div>
+  <div class="box exam"><span class="lbl">(c) LR circuit, \(L=1,R=1,V=\int_0^te^{2u}\sin3u\,du\), \(I(0)=0\) · 5 marks</span></div>
+  <div class="steps">
+    <div class="step">\((s+1)I(s)=\frac{3}{s((s-2)^2+9)}\)</div>
+    <div class="step">\(I(s)=\frac{3/13}{s}-\frac{1/6}{s+1}-\frac{5(s-2)+3}{78((s-2)^2+9)}\)</div>
+    <div class="step">\(I(t)=\frac3{13}-\frac16e^{-t}-\frac{e^{2t}}{78}(5\cos3t+\sin3t)\)</div>
+  </div>
+</section>
+<section class="card" id="a2">
+  <h2><span class="num">Q2</span> Series solutions <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="series.html#frob">Lesson 4.1–4.3 → (the Frobenius engine has this equation)</a></p>
+  <div class="box exam"><span class="lbl">(a) Explain ordinary and regular singular points · 5 marks</span>For \(P_0y''+P_1y'+P_2y=0\) with polynomial coefficients: \(x=a\) is <b>ordinary</b> if \(P_0(a)\ne0\). It is <b>regular singular</b> if \(P_0(a)=0\) but \((x-a)\frac{P_1}{P_0}\) and \((x-a)^2\frac{P_2}{P_0}\) are analytic (finite limits) at \(a\).</div>
+  <div class="box exam"><span class="lbl">(b)(i) \(x(1-x)y''+(3x-1)y'+y=0\) near 0 · 10 marks</span></div>
+  <div class="steps">
+    <div class="step">\(xP_1/P_0=\frac{3x-1}{1-x}\to-1\) and \(x^2P_2/P_0\to0\), so x = 0 is regular singular. Take \(y=\sum a_nx^{n+m}\).</div>
+    <div class="step">Lowest power \(x^{m-1}\): \(a_0[m(m-1)-m]=0\), so \(m^2-2m=0\) and \(m=0,2\) (Case 3).</div>
+    <div class="step">Recurrence: \(a_{k+1}(k+m+1)(k+m-1)=a_k\big[(k+m)^2-4(k+m)-1\big]\).</div>
+    <div class="step">\(m=2\): \(a_{k+1}=\frac{k^2-5}{(k+3)(k+1)}a_k\), giving \(y_1=x^2\left(1-\frac53x+\frac56x^2-\cdots\right)\).</div>
+    <div class="step">\(m=0\): at \(k=1\) you get \(0\cdot a_2=-4a_1\) but \(a_1=a_0\ne0\). Contradiction, so a log term is needed:
+      \[y_2=-2y_1\ln x+1+x-\tfrac{40}9x^3+\cdots,\qquad y=c_1y_1+c_2y_2\]</div>
+  </div>
+  <div class="box exam"><span class="lbl">(b)(ii) \((x+1)y''-(x+1)^2y=0\) near −1 · 10 marks</span></div>
+  <div class="steps">
+    <div class="step">Divide by \(x+1\) and let \(t=x+1\): \(y''-ty=0\). Then \(t=0\) is an ordinary point.</div>
+    <div class="step">\(\sum(n+2)(n+1)a_{n+2}t^n=\sum a_{n-1}t^n\Rightarrow a_2=0,\ a_{n+2}=\frac{a_{n-1}}{(n+2)(n+1)}\).</div>
+    <div class="step">\(y=a_0\left[1+\frac{(x+1)^3}{6}+\frac{(x+1)^6}{180}+\cdots\right]+a_1\left[(x+1)+\frac{(x+1)^4}{12}+\frac{(x+1)^7}{504}+\cdots\right]\)</div>
+  </div>
+</section>
+<section class="card" id="a3">
+  <h2><span class="num">Q3</span> Heat equation <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="pde.html#sepvar">Lesson 3.3 and 3.6 → (animated)</a></p>
+  <div class="box exam"><span class="lbl">(a) General solution, all three cases · 12 marks</span>See the full derivation in <a href="pde.html#sepvar">lesson 3.3</a>. Summary for \(u=XT\), \(\frac{T'}{c^2T}=\frac{X''}{X}=k\):<br>
+  \(k=0\): \(u=(Ax+B)C\). · \(k=p^2\): \(u=(Ae^{px}+Be^{-px})Ce^{c^2p^2t}\). · \(k=-p^2\): \(u=(A\cos px+B\sin px)Ce^{-c^2p^2t}\), which is the physically relevant one.</div>
+  <div class="box exam"><span class="lbl">(b) Bar of length π at 100 °C, ends at 0 °C, c = 1 · 13 marks</span></div>
+  <div class="steps">
+    <div class="step">\(u(0,t)=u(\pi,t)=0\) gives \(A=0\) and \(p=n\), so \(u=\sum B_n\sin nx\,e^{-n^2t}\).</div>
+    <div class="step">\(u(x,0)=100\Rightarrow B_n=\frac2\pi\int_0^\pi100\sin nx\,dx=\frac{200(1-(-1)^n)}{n\pi}\).</div>
+    <div class="step">\(u(x,t)=\frac{400}\pi\sum_{n\,odd}\frac{\sin nx}{n}e^{-n^2t}\)</div>
+  </div>
+</section>
+<section class="card" id="a4">
+  <h2><span class="num">Q4</span> Fourier series and Parseval <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="fourier-series.html#parseval">Lesson 2.3, 2.6, 2.8 → (presets "1 + x" and "2x − 1")</a></p>
+  <div class="steps">
+    <div class="step" data-t="(a)">\(f=1+x\) on \((-\pi,\pi)\). \(a_0=\frac1\pi\int(1+x)=2\). \(a_n=\frac1\pi\int(1+x)\cos nx=0\), since the \(x\cos nx\) part is odd and \(\int\cos nx=0\).</div>
+    <div class="step" data-t="(a)">\(b_n=\frac1\pi\int x\sin nx\,dx=\frac{2(-1)^{n+1}}{n}\). So \(1+x=1+2\sum\frac{(-1)^{n+1}}{n}\sin nx\).</div>
+    <div class="step" data-t="(b)">Parseval with \(l=\pi\): \(\frac1\pi\int_{-\pi}^{\pi}(1+x)^2dx=\frac1\pi\left(2\pi+\frac{2\pi^3}3\right)=2+\frac{2\pi^2}3\).</div>
+    <div class="step" data-t="(b)">\(=\frac{a_0^2}2+\sum b_n^2=2+4\sum\frac1{n^2}\), so \(\sum\frac1{n^2}=\frac{\pi^2}6\) ∎</div>
+    <div class="step" data-t="(c)">\(g=2x-1\) on \((0,1)\), cosine series with \(\ell=1\): \(a_0=2\int_0^1(2x-1)dx=0\).</div>
+    <div class="step" data-t="(c)">\(a_n=2\int_0^1(2x-1)\cos n\pi x\,dx=\frac{4((-1)^n-1)}{n^2\pi^2}\). So \(2x-1=-\frac8{\pi^2}\sum_{n\,odd}\frac{\cos n\pi x}{n^2}\).</div>
+    <div class="step" data-t="(d)">Put \(x=0\), where the even extension is continuous: \(-1=-\frac8{\pi^2}\sum_{n\ge0}\frac1{(2n+1)^2}\), so \(\sum\frac1{(2n+1)^2}=\frac{\pi^2}8\) ∎</div>
+  </div>
+</section>
+</div>
+
+<!-- ====================== 2022 ====================== -->
+<div class="paper" id="p22">
+<section class="card" id="b1">
+  <h2><span class="num">Q1</span> Dirac delta and Laplace applications <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="laplace.html#delta">Lesson 1.6 → (δₙ animation)</a></p>
+  <div class="steps">
+    <div class="step" data-t="(a)">\(\int_0^\infty f\delta_n=n\int_{a-1/2n}^{a+1/2n}f\,dt=f(c_n)\) by the mean value theorem, with \(c_n\) in the interval. As \(n\to\infty\), \(c_n\to a\), so the limit is \(f(a)\) by continuity.</div>
+    <div class="step" data-t="(b)">Put \(f=e^{-st}\): \(\mathcal L\{\delta(t-a)\}=e^{-as}\).</div>
+    <div class="step" data-t="(c)">\(y''+y=\delta(t-3)\) with zero ICs: \((s^2+1)Y=e^{-3s}\), so \(y=\sin(t-3)\,u(t-3)\).</div>
+    <div class="step" data-t="(d)">\(y''''=-\delta(x-2)\). Transform: \(s^4Y-s^3y(0)-s^2y'(0)-sy''(0)-y'''(0)=-e^{-2s}\).</div>
+    <div class="step" data-t="(d) as printed">With \(y(0)=y''(0)=0\) and \(y'(0)=y'''(0)=1\): \(Y=\frac1{s^2}+\frac1{s^4}-\frac{e^{-2s}}{s^4}\), so \(y=x+\frac{x^3}6-\frac{(x-2)^3}6u(x-2)\).</div>
+    <div class="step" data-t="(d) intended">But that gives \(y(4)\ne0\), which contradicts \(y(L)=0\). The figure shows a simply supported beam. Treat \(y'(0)=A\) and \(y'''(0)=B\) as unknowns: \(y=Ax+\frac{Bx^3}6-\frac{(x-2)^3}6u(x-2)\). Then \(y''(4)=4B-2=0\Rightarrow B=\frac12\), and \(y(4)=4A+4=0\Rightarrow A=-1\).
+      \[\boxed{y=\frac{x^3}{12}-x-\frac{(x-2)^3}{6}u(x-2)}\]
+      Mid-span deflection \(y(2)=-\frac43=-\frac{FL^3}{48EI}\) ✔. Write both versions in the exam and state your interpretation.</div>
+  </div>
+</section>
+<section class="card" id="b2">
+  <h2><span class="num">Q2</span> Series solutions <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="series.html#ordinary">Lesson 4.2–4.4 →</a></p>
+  <div class="box exam"><span class="lbl">(a) Define all three point types · 6 marks</span>Ordinary: \(P_0(a)\ne0\). Regular singular: \(P_0(a)=0\) and both \((x-a)P_1/P_0\) and \((x-a)^2P_2/P_0\) are analytic at \(a\). Irregular singular: a singular point that is not regular.</div>
+  <div class="steps">
+    <div class="step" data-t="(b)(i)">\(y''-xy=0\) about \(-2\). Let \(t=x+2\): \(y''-(t-2)y=0\), an ordinary point.</div>
+    <div class="step" data-t="(b)(i)">\((n+2)(n+1)a_{n+2}+2a_n-a_{n-1}=0\). So \(a_2=-a_0\), \(a_3=\frac{a_0-2a_1}6\), \(a_4=\frac{2a_0+a_1}{12}\).</div>
+    <div class="step" data-t="(b)(i)">\(y=a_0\left[1-(x+2)^2+\frac{(x+2)^3}6+\cdots\right]+a_1\left[(x+2)-\frac{(x+2)^3}3+\frac{(x+2)^4}{12}+\cdots\right]\)</div>
+    <div class="step" data-t="(b)(ii)">\(xy''+y'+xy=0\): \(I(m)=m^2\), so \(m=0\) is a double root (Case 2). Recurrence: \(k^2a_k=-a_{k-2}\) and \(a_1=0\).</div>
+    <div class="step" data-t="(b)(ii)">\(y_1=1-\frac{x^2}4+\frac{x^4}{64}-\cdots=J_0(x)\). \(y_2=y_1\ln x+\frac{x^2}4-\frac{3x^4}{128}+\frac{11x^6}{13824}-\cdots\)</div>
+  </div>
+</section>
+<section class="card" id="b3">
+  <h2><span class="num">Q3</span> Wave equation <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="pde.html#wave">Lesson 3.7 → (string simulator has both cases)</a></p>
+  <div class="steps">
+    <div class="step" data-t="(a)">\(y=XT\Rightarrow X''+p^2X=0\) and \(T''+c^2p^2T=0\). Ends fixed, so \(p=\frac{n\pi}l\): \(y=\sum\sin\frac{n\pi x}l\left(C_n\cos\frac{n\pi ct}l+D_n\sin\frac{n\pi ct}l\right)\).</div>
+    <div class="step" data-t="(b)">\(y_t(x,0)=0\Rightarrow D_n=0\). \(y(x,0)=\sum C_n\sin\frac{n\pi x}l=200\sin\frac{4\pi x}l\Rightarrow C_4=200\), all others 0. So \(y=200\sin\frac{4\pi x}l\cos\frac{4\pi ct}l\) ∎</div>
+    <div class="step" data-t="(c)">\(y(x,0)=0\Rightarrow C_n=0\). \(y_t(x,0)=\sum D_n\frac{n\pi c}l\sin\frac{n\pi x}l=100\sin\frac{\pi x}l\Rightarrow D_1=\frac{100l}{\pi c}\). So \(y=\frac{100l}{\pi c}\sin\frac{\pi x}l\sin\frac{\pi ct}l\).</div>
+  </div>
+</section>
+<section class="card" id="b4">
+  <h2><span class="num">Q4</span> Fourier series <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="fourier-series.html#halfrange">Lesson 2.6, 2.8, 2.9 →</a></p>
+  <div class="steps">
+    <div class="step" data-t="(a)(i)">Half-range cosine of \(x(\pi-x)\) on \((0,\pi)\): \(a_0=\frac2\pi\int_0^\pi x(\pi-x)dx=\frac{\pi^2}3\).</div>
+    <div class="step" data-t="(a)(i)">\(a_n=\frac2\pi\int_0^\pi x(\pi-x)\cos nx\,dx=-\frac{2(1+(-1)^n)}{n^2}\). That is \(-\frac{4}{n^2}\) for even \(n\) and 0 for odd. Writing \(n=2k\): \(-\frac1{k^2}\cos2kx\). So \(x(\pi-x)=\frac{\pi^2}6-\sum\frac{\cos2kx}{k^2}\) ∎</div>
+    <div class="step" data-t="(a)(ii)">Parseval (half-range cosine): \(\frac2\pi\int_0^\pi x^2(\pi-x)^2dx=\frac2\pi\cdot\frac{\pi^5}{30}=\frac{\pi^4}{15}=\frac{\pi^4}{18}+\sum\frac1{k^4}\), so \(\sum\frac1{n^4}=\frac{\pi^4}{90}\).</div>
+    <div class="step" data-t="(b)(i)">\(f=\cos x\) on \((-\frac\pi2,0)\). A sine series needs an odd function on \((-\frac\pi2,\frac\pi2)\), so \(f=-\cos x\) on \((0,\frac\pi2)\) with \(\ell=\frac\pi2\).</div>
+    <div class="step" data-t="(b)(i)">\(b_n=\frac{2}{\pi/2}\int_0^{\pi/2}(-\cos x)\sin2nx\,dx=-\frac4\pi\cdot\frac{2n}{4n^2-1}\). So \(f(x)=-\frac8\pi\sum\frac{n\sin2nx}{4n^2-1}\).</div>
+    <div class="step" data-t="(b)(ii)">The series has period \(\pi\). \(f(\pi)=f(0)\), and at 0 there is a jump between \(1\) and \(-1\), so the value is \(0\). \(f(\pi/4)=-\cos\frac\pi4=-\frac1{\sqrt2}\).</div>
+    <div class="step" data-t="(c)">\(c_n=\frac12\int_{-1}^1e^{-x}e^{-in\pi x}dx=\frac{(-1)^n\sinh1}{1+in\pi}\), so \(e^{-x}=\sum_{n=-\infty}^{\infty}\frac{(-1)^n\sinh 1\,(1-in\pi)}{1+n^2\pi^2}e^{in\pi x}\).</div>
+  </div>
+</section>
+</div>
+
+<!-- ====================== 2023 intake ====================== -->
+<div class="paper" id="p23">
+<section class="card" id="c1">
+  <h2><span class="num">Q1</span> Laplace transform <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="laplace.html#table">Lessons 1.1, 1.3 and 1.10 → (two-mass animation)</a></p>
+  <div class="steps">
+    <div class="step" data-t="(a)(i)">\(\mathcal L\{e^{iat}\}=\frac1{s-ia}=\frac{s+ia}{s^2+a^2}\) for \(\operatorname{Re}s>0\). The real part gives \(\mathcal L\{\cos at\}=\frac s{s^2+a^2}\) and the imaginary part gives \(\mathcal L\{\sin at\}=\frac a{s^2+a^2}\).</div>
+    <div class="step" data-t="(a)(ii)">By parts: \(\mathcal L\{f'\}=[e^{-st}f]_0^\infty+sF=sF-f(0)\), because exponential order makes the upper limit vanish. Apply twice: \(\mathcal L\{f''\}=s^2F-sf(0)-f'(0)\).</div>
+    <div class="step" data-t="(b)">\((s^2+4)Y_1-2Y_2=1\) and \(-2Y_1+(s^2+4)Y_2=1\). Subtracting gives \(Y_1=Y_2\), so \((s^2+2)Y_1=1\).</div>
+    <div class="step" data-t="(b)">\(y_1(t)=y_2(t)=\frac{1}{\sqrt2}\sin(\sqrt2\,t)\)</div>
+  </div>
+</section>
+<section class="card" id="c2">
+  <h2><span class="num">Q2</span> Fourier series and Fourier transform <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="fourier-series.html#series">Builder preset "−1 for |x| &lt; 1" →</a> · <a href="fourier-transform.html#props">Lesson 5.4 →</a></p>
+  <div class="lab"><div class="lab-h"><b>(a)(i) Sketch on [−2, 6]</b></div><canvas class="plot short" id="sk"></canvas></div>
+  <div class="steps">
+    <div class="step" data-t="(a)(ii)">The function is even with \(\ell=2\), so \(b_n=0\). \(a_0=\frac22\int_0^2f=\int_0^1(-1)dx=-1\).</div>
+    <div class="step" data-t="(a)(ii)">\(a_n=\int_0^1-\cos\frac{n\pi x}2dx=-\frac{2}{n\pi}\sin\frac{n\pi}2\). So \(f=-\frac12-\frac2\pi\left(\cos\frac{\pi x}2-\frac13\cos\frac{3\pi x}2+\frac15\cos\frac{5\pi x}2-\cdots\right)\).</div>
+    <div class="step" data-t="(a)(iii)">Parseval: \(\frac12\int_{-2}^2f^2=\frac12\cdot2=1=\frac{1}{2}+\frac{4}{\pi^2}\sum_{odd}\frac1{n^2}\), so \(\sum_{n\ge0}\frac{1}{(2n+1)^2}=\frac{\pi^2}8\).</div>
+    <div class="step" data-t="(b)(i)">By parts: \(\mathcal F\{f'\}=[fe^{-i\omega t}]_{-\infty}^{\infty}+i\omega\int fe^{-i\omega t}=i\omega F\), since \(f\to0\) at \(\pm\infty\).</div>
+    <div class="step" data-t="(b)(ii)">\(te^{-(t-1)^2}-e^{-(t-1)^2}=g(t-1)\) with \(g=te^{-t^2}=-\frac12(e^{-t^2})'\). So \(G=-\frac{i\omega}{2}\sqrt\pi e^{-\omega^2/4}\), and the answer is \(-\frac{i\sqrt\pi}{2}\omega e^{-\omega^2/4-i\omega}\).</div>
+  </div>
+</section>
+<section class="card" id="c3">
+  <h2><span class="num">Q3</span> Laplace's equation <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="pde.html#laplace2d">Lesson 3.4 heat map →</a> · <a href="fourier-transform.html#apps">Lesson 5.7 strip →</a></p>
+  <div class="steps">
+    <div class="step" data-t="(a)">\(X''+k^2X=0\) and \(Y''-k^2Y=0\). \(U(0,y)=U(1,y)=0\Rightarrow X=\sin n\pi x\). \(U(x,1)=0\Rightarrow Y=\sinh n\pi(1-y)\).</div>
+    <div class="step" data-t="(a)">\(U(x,0)=\sum A_n\sinh(n\pi)\sin n\pi x=\sinh\pi\sin\pi x\Rightarrow A_1=1\). So \(U=\sin\pi x\,\sinh\pi(1-y)\).</div>
+    <div class="step" data-t="(b)">Transform in x: \(\hat U_{yy}=\omega^2\hat U\). Then \(\hat U(\omega,0)=0\) and \(\hat U(\omega,1)=\sqrt\pi e^{-\omega^2/4}\).</div>
+    <div class="step" data-t="(b)">\(\hat U=\sqrt\pi e^{-\omega^2/4}\frac{\sinh\omega y}{\sinh\omega}\), so \(U=\frac1{\sqrt\pi}\int_0^\infty e^{-\omega^2/4}\frac{\sinh\omega y}{\sinh\omega}\cos\omega x\,d\omega\).</div>
+  </div>
+</section>
+<section class="card" id="c4">
+  <h2><span class="num">Q4</span> Series solutions <span class="tag">25 marks</span></h2>
+  <p class="sub"><a href="series.html#ordinary">Lesson 4.2 preset "2025 Q4(a)" →</a></p>
+  <div class="steps">
+    <div class="step" data-t="(a)">\(xy''+y=0\) about 1: \(P_0(1)=1\ne0\), so it is ordinary. With \(t=x-1\): \((t+1)y''+y=0\).</div>
+    <div class="step" data-t="(a)">\((n+2)(n+1)a_{n+2}+(n+1)na_{n+1}+a_n=0\). So \(a_2=-\frac{a_0}2\), \(a_3=\frac{a_0-a_1}6\), \(a_4=\frac{2a_1-a_0}{24}\).</div>
+    <div class="step" data-t="(a)">\(y=a_0\left[1-\frac{(x-1)^2}2+\frac{(x-1)^3}6-\cdots\right]+a_1\left[(x-1)-\frac{(x-1)^3}6+\frac{(x-1)^4}{12}-\cdots\right]\)</div>
+    <div class="step" data-t="(b)">Identical to 2022 Q2(b)(ii): \(m=0\) is a double root. \(y_1=J_0=1-\frac{x^2}4+\frac{x^4}{64}\), and \(y_2=J_0\ln x+\frac{x^2}4-\frac{3x^4}{128}+\cdots\)</div>
+  </div>
+</section>
+</div>
+
+</main></div>
+<footer>MA2014 Visual Lab · Past papers</footer>
+<script src="js/common.js"></script>
+<script>
+const H=[['Laplace transform','laplace.html',25,25,25],['Fourier series','fourier-series.html',25,25,15],['PDEs (separation)','pde.html',25,25,13],['Series and Frobenius','series.html',25,25,25],['Fourier transform','fourier-transform.html',0,0,22]];
+$('#heat').innerHTML='<tr><th>topic</th><th>2023 paper</th><th>2024 paper</th><th>2025 paper</th><th>total</th></tr>'+H.map(([n,h,...m])=>`<tr><th><a href="${h}">${n}</a></th>${m.map(v=>`<td style="background:${v?`rgba(255,93,143,${0.25+0.75*v/25})`:'rgba(255,255,255,.05)'};color:${v?'#0b1020':'#556'}">${v||'—'}</td>`).join('')}<td style="background:rgba(255,209,102,${0.3+0.7*m.reduce((a,b)=>a+b)/75})">${m.reduce((a,b)=>a+b)}</td></tr>`).join('');
+$$('.papers button').forEach(b=>b.onclick=()=>{ $$('.papers button').forEach(x=>x.classList.toggle('on',x===b)); $$('.paper').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p)); if(b.dataset.p==='p23') setTimeout(sk,30); });
+let skP; function sk(){ if(!skP){ skP=new Plot('#sk',{xmin:-2.2,xmax:6.2,ymin:-1.5,ymax:0.6,xlabel:'x',xticks:1}); skP.onresize=sk; }
+  const f=x=>{ const u=((x+2)%4+4)%4-2; return Math.abs(u)<1?-1:0; }; skP.clear().axes(); skP.fill(f,'rgba(255,93,143,.2)'); skP.fn(f,'#ff5d8f',3,{jump:0.3}); [-1,1,3,5].forEach(x=>skP.dot(x,-0.5,'#ffd166',4)); skP.text('jumps converge to −½',3,-0.5,'#ffd166',{dx:8,dy:-6}); }
+</script>
+</body></html>
